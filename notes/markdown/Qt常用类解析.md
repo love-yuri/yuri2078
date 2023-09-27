@@ -250,3 +250,125 @@ QTableView的子元素包括QHeaderView，可以通过以下样式选择器设�
 - QAbstractItemView::indicator: 表示多选框或单选框的样式。
 
 需要注意的是，由于每个QTableView的样式是不同的，需要根据实际情况进行样式调整，可以通过在样式表中使用QSS的子元素选择器来调整各个子元素的样式。
+
+
+
+## QPainter
+
+> Qt 6 中的 QPainter 是一个用于在 QWidget 和其他绘图设备上进行绘图操作的类。它提供了各种函数来绘制图形、文本、图像和其他内容。
+
+官网地址： [QPainter](https://doc.qt.io/qt-6/qpainter.html)
+
+### 总结
+
+构造函数表示在哪里绘制
+
+### 函数
+
+1. **begin() 和 end()**：
+
+   - `begin(QPaintDevice *device)`：开始在指定的绘图设备上进行绘图操作，通常是 QWidget 或 QPixmap。
+   - `end()`：结束绘图操作。在每次绘图操作之前都需要调用 `begin()`，并在绘图完成后调用 `end()`。
+
+2. **setPen()**：设置画笔的属性，如颜色、线条宽度、线条样式等。
+
+   ```c++
+   void setPen(const QPen &pen);
+   ```
+
+3. **setBrush()**：设置画刷的属性，用于填充图形。
+
+   ```c++
+   void setBrush(const QBrush &brush);
+   ```
+
+4. **drawRect()**：绘制矩形。
+
+   ```c++
+   void drawRect(const QRectF &rect);
+   ```
+
+5. **drawEllipse()**：绘制椭圆。
+
+   ```c++
+   void drawEllipse(const QRectF &rect);
+   ```
+
+6. **drawLine()**：绘制直线。
+
+   ```c++
+   void drawLine(const QLineF &line);
+   ```
+
+7. **drawText()**：绘制文本。
+
+   ```c++
+   void drawText(const QPointF &position, const QString &text);
+   ```
+
+8. **drawPixmap()**：绘制图像。
+
+   ```c++
+   void drawPixmap(const QRectF &rectangle, const QPixmap &pixmap);
+   ```
+
+9. **setFont()**：设置字体属性，用于绘制文本。
+
+   ```c++
+   void setFont(const QFont &font);
+   ```
+
+10. **setRenderHint()**：设置绘图选项和渲染提示，例如抗锯齿、文本抗锯齿等。
+
+    ```c++
+    void setRenderHint(QPainter::RenderHint hint, bool on = true);
+    ```
+
+11. **resetTransform() 和 setTransform()**：用于设置和重置变换矩阵，可以实现平移、缩放、旋转等操作。
+
+    ```c++
+    void setTransform(const QTransform &matrix, bool combine = false);
+    ```
+
+12. **save() 和 restore()**：保存和恢复绘图状态，包括画笔、画刷、字体等属性。
+
+    ```c++
+    void restore();
+    ```
+
+13. **fillRect()**：用指定的画刷颜色填充矩形区域。
+
+    ```c++
+    void fillRect(const QRectF &rectangle, const QBrush &brush);
+    ```
+
+14. **setOpacity()**：设置绘制的透明度。
+
+    ```c++
+    void setOpacity(qreal opacity);
+    ```
+
+# 常用技巧
+
+## 图片缩放
+
+```c++
+int targetWidth = 200; // 目标宽度
+int targetHeight = 200; // 目标高度
+qreal scaleFactor = 1.0; // 缩放b
+if (pixmap.width() > targetWidth || pixmap.height() > targetHeight) {
+  qreal widthScaleFactor = static_cast<qreal>(targetWidth) / pixmap.width();
+  qreal heightScaleFactor = static_cast<qreal>(targetHeight) / pixmap.height();
+  // 选择较小的比例，以保持纵横比
+  scaleFactor = qMin(widthScaleFactor, heightScaleFactor);
+}
+
+// 缩小图片
+QPixmap scaledPixmap = pixmap.scaled(
+  pixmap.width() * scaleFactor,
+  pixmap.height() * scaleFactor,
+  Qt::KeepAspectRatio,     // 保持纵横比
+  Qt::SmoothTransformation // 使用平滑的缩放算法
+);
+```
+
