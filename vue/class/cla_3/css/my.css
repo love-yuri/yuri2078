@@ -1,0 +1,54 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#app {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#main-body, #information{
+    font-size: 22px;
+    max-width: 450px;
+    border: 1px solid pink;
+    border-radius: 4px;
+}
+
+.tip-title {
+    color: #84ABF0;
+    font-size: 20px;
+}
+
+
+#top {
+    margin-left: 32px;
+    margin-top: 16px;
+}
+
+#top button {
+    color: rgb(11, 111, 204);
+    border: none;
+    font-size: 17px;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+#top p {
+    text-align: center;
+    display: inline-block; 
+    font-weight:400;
+    font-size: 18px;
+    margin-left: calc(50% - 142px);
+}
+
+h4 {
+    font-size: 16px;
+    margin-left: 16px;
+}
+
+

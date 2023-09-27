@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>092221208廖华勇-实验2</title>
+    <link rel="stylesheet" href="./css/index.css" />
+    <link rel="stylesheet" href="./css/my.css" />
+    <script src="./js/vue@3"></script>
+    <script src="./js/vant.min.js"></script>
+  </head>
+
+  <body>
+    <div id="app">
+
+      <!-- 顶部 -->
+      <div id="top_bar">
+        <div id="top_bar_back"><van-icon name="arrow-left" size="34" /></div>
+        <div id="top_bar_title">旅游景点购票</div>
+      </div>                                   
+
+      <!-- 主部件 -->
+      <div id="main_body" style="width: 100%;">
+        <!-- 显示图片 -->
+        <van-image :src="imgs[index].src" fit="cover" style="max-height: 300px;" position="center" />
+        <h4 style="text-align: center; color: #C8C8C9; font-size: 20px; margin: 4px;">{{ imgs[index].name }}</h4>
+
+        <!-- 两个按钮 -->
+        <div style="display: flex; align-items: center; justify-content: center;">
+          <van-button type="primary" @click="pre_img" style="font-size: 23px;">前一个</van-button>
+          <van-button type="success" @click="next_img" style="margin-left: 40px; font-size: 23px;">后一个</van-button>
+        </div> 
+
+        <!-- 景点介绍 -->
+        <div>
+          {{ imgs[index].introduc }}
+        </div>
+
+        <!-- 购票信息 -->
+        <div>
+          <van-cell-group >
+            <van-cell title="票价" style="padding-left: 0;" :value="imgs[index].price + ' 元'" />
+          </van-cell-group>
+          <van-cell-group >
+            <van-cell :title="'数量&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+ ticket_count" style="padding-left: 0;"/>
+            <van-stepper v-model="ticket_count" theme="round" button-size="22" disable-input />
+          </van-cell-group>
+        </div>
+
+        <!-- 时间选择 -->
+        <div id="time_choose">
+          <van-calendar :max-date="max_date()" v-model:show="show" @confirm="onConfirm"></van-calendar>
+          <span>选择时间</span>
+          <span v-if="show_time" style="position: absolute; left: 100px;">{{ date }}</span>
+          <van-button @click="show = true" type="primary" size="small" style="border: none; font-size: 17px; background-color: #DEB752;">选择使用时间</van-button>
+        </div>
+
+        <!-- 购买按钮 -->
+        <div style="width: 100%; display: flex; justify-content: center;">
+          <van-button @click="buy" style="width: 90%; border-radius: 22px; font-size: 22px;" type="success">购票</van-button>
+        </div>
+      </div>
+
+      <!-- 弹出框 -->
+      <van-dialog v-model:show="show_dialog" @confirm="confirm" @cancel="cancel" title="请确认订票信息" show-cancel-button>
+        <van-cell-group>
+          <van-cell title="景点名称" :value="imgs[index].name" ></van-cell>
+          <van-cell title="门票单价" :value="imgs[index].price" ></van-cell>
+          <van-cell title="门票数量" :value="ticket_count" ></van-cell>
+          <van-cell title="门票总价" :value="ticket_count * imgs[index].price" ></van-cell>
+          <van-cell title="使用日期" :value="date" ></van-cell>
+        </van-cell-group>
+      </van-dialog>
+    </div>
+  </body>
+  <!-- 图片信息 -->
+  <script src="js/attractions.js"></script>
+  <!-- 主处理js -->
+  <script src="js/my.js"></script>
+</html>
