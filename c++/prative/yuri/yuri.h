@@ -15,12 +15,14 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <chrono>
-
+#include <fstream>
+#include <iostream>
+#include <mutex>
+#include <sstream>
+#include <ctime>
 // class MyIterator : public std::iterator<std::random_access_iterator_tag, T t>
 
-namespace yuri
-
-{
+namespace yuri {
 class Yuri {
 private:
   bool is_single;
@@ -147,38 +149,76 @@ public:
   }
 };
 
+static std::mutex mutex;
+static bool write_in_file = false; // 是否写入文件
+
+inline static void logResult(const std::string &msg, std::ostream &cout) {
+  cout << msg;
+  std::endl(cout);
+}
+
+inline static void setWriteInFile() {
+  write_in_file = true;
+}
+
 class Log {
+private:
+  std::ostringstream ost;
+
 public:
-  Log(bool) {
-    std::cout << "\x1b[31m";
-    sendMsg();
+  Log(const std::string &func, int line) {
+    std::time_t currentTime = std::time(nullptr);
+    std::tm *localTime = std::localtime(&currentTime);
+    char formattedTime[9];
+    std::strftime(formattedTime, 9, "%H:%M:%S", localTime);
+    ost << formattedTime << " " << func << ":" << line << " -> ";
   }
 
-  Log() {
-    sendMsg();
+  Log(const std::string &func, int line, bool) {
+    if (!write_in_file) {
+      ost << "\x1b[31m";
+    }
+    std::time_t currentTime = std::time(nullptr);
+    std::tm *localTime = std::localtime(&currentTime);
+    char formattedTime[9];
+    std::strftime(formattedTime, 9, "%H:%M:%S", localTime);
+    ost << formattedTime << " " << func << ":" << line << " -> ";
   }
 
-  void sendMsg() {
-    std::time_t currentTime_t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    std::tm *localTime = std::localtime(&currentTime_t);
-    std::cout << "[" << std::put_time(localTime, "%H:%M:%S");
-    std::cout << " " << __FILE__ << ":" << __LINE__ << "] ";
+  virtual ~Log() {
+    mutex.lock();
+    if (write_in_file) {
+      std::fstream fst;
+      try {
+        fst.open("log.txt", std::ios::app);
+        logResult(ost.str(), fst);
+        fst.flush();
+        fst.close();
+      } catch (std::exception &e) {
+        std::cout << e.what();
+      }
+    } else {
+      ost << "\x1b[0m";
+      logResult(ost.str(), std::cout);
+    }
+    mutex.unlock();
   }
 
   template <typename T>
-  Log &operator<<(T &&val) {
-    std::cout << val;
+  Log &operator<<(T val) {
+    ost << val;
     return *this;
-  }
-
-  ~Log() {
-    std::cout << "\x1b[0m\n";
   }
 };
 
-#define info Log()
-#define error Log(false)
-
 } // namespace yuri
+
+#ifndef info
+#define info yuri::Log(__func__, __LINE__)
+#endif
+
+#ifndef error
+#define error yuri::Log(__func__, __LINE__, true)
+#endif
 
 #endif // LOG_YURI_H

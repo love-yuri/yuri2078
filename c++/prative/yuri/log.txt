@@ -1,0 +1,8 @@
+main.cpp main:5 -> yuri is yes
+11:05:51 main:5yuri is yes5
+11:48:54 main:5 -> yuri is yes5[0m
+[31m11:48:54 main:6 -> yuri is yes[0m  
+11:50:59 main:5 -> yuri is yes5
+11:50:59 main:6 -> yuri is yes
+13:19:27 main:19 -> yuri is yes
+13:19:27 fun:10 -> yuri is good
