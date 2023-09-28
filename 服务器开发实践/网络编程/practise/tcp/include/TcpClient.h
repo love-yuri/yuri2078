@@ -38,6 +38,24 @@ public:
     return true;
   }
 
+  // 接受服务器数据
+  bool readFromServer() {
+    if (fd == -666) {
+      error << "套接字没有连接!";
+      return false;
+    }
+    char buff[1024]{};
+    sock_t ret = ::recv(fd, buff, 1024, 0);
+    if(ret == 0) {
+      info << "服务器关闭连接!";
+    } else if(ret < 0) {
+      error << "读取错误!";
+      return false;
+    }
+    info << buff;
+    return true;
+  }
+
   // 向客户端发送数据
   bool writeToServer(const std::string msg) {
     if (fd == -666) {
