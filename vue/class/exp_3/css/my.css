@@ -1,0 +1,31 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  background-color: gray;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* 总体样式 */
+#app {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  min-width: 360px;
+}
+
+/* 三个按钮样式 */
+#top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+

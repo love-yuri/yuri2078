@@ -1,0 +1,151 @@
+<!--
+ * @Author: love-yuri yuri2078170658@gmail.com
+ * @Date: 2023-10-01 18:21:38
+ * @LastEditTime: 2023-10-01 20:52:23
+ * @Description: 实验3
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>092221208廖华勇-实验3</title>
+  <link rel="stylesheet" href="./css/index.css" />
+  <link rel="stylesheet" href="./css/my.css" />
+  <script src="./js/vue@3"></script>
+  <script src="./js/vant.min.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div id="top">
+      <van-button :type="show === 1 ? 'primary' : ''" @click="show = 1">手机登陆</van-button>
+      <van-button :type="show === 2 ? 'primary' : ''" @click="show = 2">账号登陆</van-button>
+      <van-button :type="show === 3 ? 'primary' : ''" @click="show = 3">邮箱登陆</van-button>
+    </div>
+
+    <!-- 手机号登陆 -->
+    <van-form @submit="onSubmit">
+      <van-cell-group inset v-if="show === 1">
+        <van-divider></van-divider>
+        <van-field v-model="phone_num" left-icon="phone-o" placeholder="请输入用手机号码" :rules="phone_rule"></van-field>
+        <van-field v-model="sms" center left-icon="bag-o" placeholder="请输入短信验证码">
+          <template #button>
+            <van-button type="primary" size="small" @click="sendSms" :disabled="!ready_send">{{ sms_text }}</van-button>
+          </template>
+        </van-field>
+      </van-cell-group>
+
+      <!-- 账号登陆 -->
+      <van-cell-group inset v-else-if="show === 2">
+        <van-divider></van-divider>
+        <van-field v-model="phone_num" left-icon="phone-o" placeholder="请输入账号" :rules="account_rule"></van-field>
+        <van-field v-model="sms"  left-icon="bag-o" type="password" placeholder="请输入密码" :rules="account_rule"> </van-field>
+      </van-cell-group>
+
+      <!-- 邮箱登陆 -->
+      <van-cell-group inset v-else>
+        <van-divider></van-divider>
+        <van-field v-model="phone_num" left-icon="phone-o" placeholder="请输入邮箱账号" :rules="mail_rule"></van-field>
+        <van-field v-model="sms"  left-icon="bag-o" type="password" placeholder="请输入密码" :rules="account_rule"> </van-field>
+      </van-cell-group>
+      
+      <!-- 登陆按钮 -->
+      <van-divider></van-divider>
+      <van-button type="primary" style="width: 100%;" native-type="submit">登陆</van-button>
+    </van-form>
+  </div>
+</body>
+<script>
+  const { createApp, ref } = Vue;
+  const { showDialog, showNotify } = vant;
+
+  const show = ref(1);
+
+  /* 电话号码 + 校验规则 */
+  const phone_num = ref('');
+  const phone_rule = ref([{
+      required: true,
+      message: '请输入正确的电话号码',
+      pattern: /^1[3456789]\d{9}$/
+  }]);
+
+  /* 账号密码校验规则 */
+  const account_rule = ref([{
+      required: true,
+      message: '请输入正确的账号密码',
+      // 6-12位 数字 + 字符 + 字母
+      pattern: /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\-]{6,12}$/
+  }]);
+
+  /* 账号密码校验规则 */
+  const mail_rule = ref([{
+      required: true,
+      message: '请输入正确的邮箱',
+      pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  }]);
+
+  /* 短信验证码  */ 
+  const sms = ref(''); 
+  const ready_send = ref(true);
+  const sms_text = ref('发送验证码');
+  var code = '';
+
+  /* function */
+
+  const onSubmit = ()=> {
+    if(show.value === 1 && (code == '' || code != sms.value)) {
+      showNotify({ 
+        type: 'danger',
+        message: '验证码错误！' 
+      });
+      return;
+    }
+    showDialog({
+      message: "登陆成功!",
+      theme: "round-button",
+    });
+  }
+
+  // 发送验证码
+  const sendSms = () => {
+    ready_send.value = false;
+    setTimeout(() => {
+      let time = 60;
+      var interval = setInterval(() => {
+        time--;
+        sms_text.value = time + 's';
+        if(time < 0) {
+          clearInterval(interval);
+          sms_text.value = '重新发送验证码';
+          ready_send.value = true;
+        }
+      }, 1000);
+
+      code = Math.floor(Math.random() * 9000) + 1000;
+      showNotify({
+        message: '您的验证码 : ' + code,
+        color: '#ad0000',
+        background: '#ffe1e1',
+        duration: 4000,
+      });
+    },Math.floor(Math.random() * 1000));
+  }
+
+  const App = {
+    data() {
+      return {
+        show, phone_num, sms, ready_send, sms_text,
+        phone_rule, account_rule, mail_rule,
+        onSubmit, sendSms
+      };
+    },
+  };
+  const app = Vue.createApp(App);
+  app.use(vant);
+  app.mount("#app");
+</script>
+
+</html>
