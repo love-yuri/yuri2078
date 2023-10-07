@@ -1,0 +1,221 @@
+<!--
+ * @Author: love-yuri yuri2078170658@gmail.com
+ * @Date: 2023-10-02 09:55:19
+ * @LastEditTime: 2023-10-02 12:34:31
+ * @Description: 模块测试1
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>学号:092221208 姓名: 廖华勇</title>
+  <link rel="stylesheet" href="./css/index.css" />
+  <link rel="stylesheet" href="./css/my.css" />
+  <script src="./js/vue@3"></script>
+  <script src="./js/vant.min.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div id="top_bar">
+      <van-icon name="arrow-left" size="20px"></van-icon>
+      <span style="font-size: 20px;">计算机学院学生去向调查</span>
+    </div>
+    <van-form @submit="onSubmit">
+      <!-- 学号手机号 -->
+      <van-cell-group inset>
+        <van-field v-model="sno" label="学号" placeholder="请输入学号" 
+          :rules="sno_rule"></van-field>
+        <van-field v-model="pho" label="手机号" placeholder="请输入手机号" 
+          :rules="phone_rule"></van-field>
+
+        <!-- 专业 -->
+        <van-field 
+          v-model="major" is-link readonly label="专业" placeholder="请选择专业"
+          @click="show_major_picker = true" :rules="required_rule">
+        </van-field>
+
+        <van-popup v-model:show="show_major_picker" position="bottom">
+          <van-picker :columns="major_columns" @confirm="onMajorConfirm" 
+            @cancel="show_major_picker = false">
+          </van-picker>
+        </van-popup>
+
+        <!-- 年级 -->
+        <van-field v-model="grade" is-link readonly label="年级" placeholder="请选择年级"
+          @click="show_grade_picker = true" :rules="required_rule">
+        </van-field>
+
+        <van-popup v-model:show="show_grade_picker" position="bottom">
+          <van-picker 
+            :columns="grade_columns" @confirm="onGradeConfirm" 
+            @cancel="show_grade_picker = false"></van-picker> 
+          </van-picker>
+        </van-popup>
+
+        <!-- 离开日期 -->
+        <van-field
+          v-model="leave_date" is-link readonly label="离开时间" placeholder="选择离开时间"
+          @click="show_leave_date_picker = true" :rules="required_rule">
+        </van-field>
+        <van-calendar 
+          :min-date="new Date('2023-9-28')" :max-date="new Date('2023-10-8')"
+          v-model:show="show_leave_date_picker" @confirm="onLeaveDateConfirm">
+        </van-calendar>
+
+        <!-- 返程日期 -->
+        <van-field
+          v-model="back_date" is-link readonly label="返程时间" placeholder="选择返程时间"
+          @click="show_back_date_picker = true" :rules="required_rule">
+        </van-field>
+        <van-calendar 
+          :min-date="new Date('2023-9-28')" :max-date="new Date('2023-10-8')"
+          v-model:show="show_back_date_picker" @confirm="onBackDateConfirm">
+        </van-calendar>
+        
+      </van-cell-group>
+      <div style="margin: 16px;">
+        <van-button round block type="primary" native-type="submit">
+          提交
+        </van-button>
+      </div>
+      
+    </van-form>
+
+    <!-- 显示结果 -->
+    <van-popup 
+      v-model:show="show_result" position="center" style="width: 100%; max-width: 400px;">
+      <van-cell-group inset>
+        <van-cell title="学号" :value="sno"></van-cell>
+        <van-cell title="手机号" :value="pho"></van-cell>
+        <van-cell title="专业" :value="major"></van-cell>
+        <van-cell title="年级" :value="grade"></van-cell>
+        <van-cell title="离开日期" :value="leave_date"></van-cell>
+        <van-cell title="返程日期" :value="back_date"></van-cell>
+      </van-cell-group>
+    </van-popup>
+  </div>
+</body>
+
+<script>
+  const { createApp, ref } = Vue;
+  const { showDialog } = vant;
+
+  const sno = ref(''); // 学号
+  const pho = ref(''); // 手机号
+  const major = ref(''); // 专业
+  const grade = ref(''); // 年级
+  const leave_date = ref(''); // 离开日期
+  const back_date = ref(''); // 返程日期
+
+  // 学号校验
+  const sno_rule = [{
+    required: true,
+    message: '请输入正确的学号',
+    pattern: /^[0-9a-zA-Z]\d{8}$/
+  }];
+
+  // 必填校验
+  const required_rule = [{
+    required: true,
+    message: '该选项不可为空!',
+  }];
+
+  // 手机号校验
+  const phone_rule = [{
+    required: true,
+    message: '请输入正确的电话号码',
+    pattern: /^1[3456789]\d{9}$/
+  }];
+
+  /* 展示组件 */
+  const show_major_picker = ref(false);
+  const show_grade_picker = ref(false);
+  const show_leave_date_picker = ref(false);
+  const show_back_date_picker = ref(false);
+  const show_result = ref(false);
+  
+  // 年级信息
+  const grade_columns = [
+    { text: '大一', value : 'one grade'},
+    { text: '大二', value : 'two grade'},
+    { text: '大三', value : 'three grade'},
+    { text: '大四', value : 'four grade'},
+  ];
+
+  // 专业信息
+  const major_columns = [
+    { text: '算机科学与技术', value: 'Computer Science' },
+    { text: '软件工程', value: 'Software Engineering' },
+    { text: '网络工程', value: 'Network Engineering' },
+    { text: '数字媒体技术', value: 'Digital Media Technology' },
+    { text: '物联网工程', value: 'Internet of Things Engineering' },
+    { text: '数据科学与大数据技术', value: 'Data Science and Big Data Technology' }
+  ];
+
+  // 专业确认
+  const onMajorConfirm = ({ selectedOptions }) => {
+    major.value = selectedOptions[0]?.text;
+    show_major_picker.value = false;
+  };
+
+  // 年级确认
+  const onGradeConfirm = ({ selectedOptions }) => {
+    grade.value = selectedOptions[0]?.text;
+    show_grade_picker.value = false;
+  };
+
+  // 格式化日期
+  const formatDate = (date) => {
+    let year = date.getFullYear();
+    let month = `${date.getMonth() + 1}`.padStart(2, '0');
+    let day = `${date.getDate()}`.padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  // 离开确认
+  const onLeaveDateConfirm = (date) => {
+    leave_date.value = formatDate(date);
+    show_leave_date_picker.value = false;
+  };
+
+  // 返程确认
+  const onBackDateConfirm = (date) => {
+    back_date.value = formatDate(date);
+    show_back_date_picker.value = false;
+  };
+
+  // 提交
+  const onSubmit = () => {
+    let leave = new Date(leave_date.value);
+    let back = new Date(back_date.value);
+    if(back < leave) {
+      showDialog({
+        message: '返程日期小于离开日期!',
+        theme: 'round-button',
+      });
+    } else {
+      show_result.value = true;
+    }
+  }
+
+  const App = {
+    data() {
+      return {
+        sno_rule, phone_rule, required_rule,
+        major_columns, show_major_picker, major, onMajorConfirm,
+        grade_columns, show_grade_picker, grade,onGradeConfirm,
+        show_leave_date_picker, leave_date, onLeaveDateConfirm,
+        show_back_date_picker, back_date, onBackDateConfirm,
+        sno, pho, show_result, onSubmit,
+      };
+    },
+  };
+  const app = Vue.createApp(App);
+  app.use(vant);
+  app.mount("#app");
+</script>
+
+</html>
