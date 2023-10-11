@@ -1,0 +1,178 @@
+<!--
+ * @Author: love-yuri yuri2078170658@gmail.com
+ * @Date: 2023-10-10 18:01:28
+ * @LastEditTime: 2023-10-11 19:43:23
+ * @Description: 课堂练习四 -1
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>092221208廖华勇-课堂练习4-1</title>
+  <link rel="stylesheet" href="./css/index.css" />
+  <link rel="stylesheet" href="./css/my.css" />
+  <script src="./js/vue@3"></script>
+  <script src="./js/vant.min.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 轮播图 -->
+    <van-swipe :autoplay="3000" indicator-color="white" style="margin-bottom: 16px;">
+      <van-swipe-item v-for="image in images" :key="image">
+        <img :src="image">
+      </van-swipe-item>
+    </van-swipe>
+
+    <!-- 显示按钮 -->
+    <div id="buttons">
+      <template v-for="(val, index, key) in product">
+        <van-button :type="button_type(index)" @click="currentIndex = index"> {{ val.name }} </van-button>
+      </template>
+    </div>
+
+    <van-divider :style="van_divider_style">
+      基本参数
+    </van-divider>
+
+    <!-- 具体参数 -->
+    <van-cell-group>
+      <template v-for="(val, index, key) in product[currentIndex].parameter">
+        <van-cell :title="index" :value="val"></van-cell>
+        <van-divider :style="van_divider_style"></van-divider>
+      </template>
+    </van-cell-group>
+
+  </div>
+  <script>
+    const { createApp, ref } = Vue;
+
+    /* 分割线样式 */
+    const van_divider_style = {
+      color: '#a4a8ac',
+      borderColor: '#1989fa',
+      padding: '0 16px'
+    }
+
+    /* 按钮样式 */
+    const button_type = (index) => {
+      if (index == currentIndex.value) {
+        return 'success';
+      }
+      return 'primary';
+    }
+
+    /* 当前选项表 */
+    const currentIndex = ref(0);
+
+    /* 图片信息 */
+    const images = [
+      './assets/wallhaven-g895pq_1920x1080.png',
+      './assets/wallhaven-q2oxdd_1920x1080.png',
+      './assets/wallhaven-r2k3y1_1920x1080.png',
+      './assets/wallhaven-vqmdq5_1920x1080.png',
+    ]
+
+    /* 产品信息 */
+    const product = [
+      {
+        name: '简介',
+        parameter: {
+          国内发布时间: '2021年3月29日',
+          电商报价: '约人民币3499元起',
+          产品型号: '小米11',
+          使用场景: '日常使用、娱乐、摄影',
+          机身颜色: '亮银、亮蓝、亮黑、亮蓝',
+          指纹识别: '屏下指纹识别',
+          面部识别: '支持'
+        }
+      },
+      {
+        name: '外形',
+        parameter: {
+          尺寸: '高度 164.3mm x 宽度 74.6mm x 厚度 8.06mm',
+          重量: '196克',
+          机身材质: '玻璃前后板，金属框架',
+          防水防尘: 'IP53级别',
+          操作按钮: '电源键、音量键、音量加减键',
+          接口: 'USB Type-C'
+        }
+      },
+      {
+        name: '硬件',
+        parameter: {
+          处理器: '高通骁龙 888',
+          存储容量: '可选8GB/128GB、8GB/256GB',
+          扩展存储: '不支持microSD卡扩展',
+          操作系统: 'MIUI 12基于Android 11'
+        }
+      },
+      {
+        name: '屏幕',
+        parameter: {
+          屏幕类型: 'AMOLED',
+          屏幕尺寸: '6.81英寸',
+          分辨率: '3200 x 1440像素',
+          屏幕刷新率: '120Hz',
+          屏幕保护: '康宁大猩猩玻璃 5'
+        }
+      },
+      {
+        name: '镜头',
+        parameter: {
+          主摄像头: '108MP 主摄像头',
+          副摄像头: '13MP 超广角摄像头',
+          镜头特性: '双像素自动对焦、光学防抖、夜景模式'
+        }
+      },
+      {
+        name: '网络',
+        parameter: {
+          移动网络: '5G支持',
+          WLAN: 'Wi-Fi 6',
+          蓝牙版本: 'Bluetooth 5.2',
+          NFC: '支持'
+        }
+      },
+      {
+        name: '电池',
+        parameter: {
+          电池容量: '4,600毫安时',
+          快充: '支持 55W 有线快充、50W 无线快充',
+          无线充电: '支持'
+        }
+      },
+      {
+        name: '服务',
+        parameter: {
+          定位系统: 'GPS、GLONASS、北斗、Galileo',
+          手机支付: '支持NFC支付',
+          感应器: '加速度计、陀螺仪、距离感应器、环境光传感器、电子罗盘、红外线遥控器'
+        }
+      },
+      {
+        name: '保障',
+        parameter: {
+          保修政策: '小米官方提供一年保修',
+          售后服务: '全国各地有小米售后服务中心'
+        }
+      }
+    ];
+
+    const App = {
+      data() {
+        return {
+          images, product, van_divider_style,
+          currentIndex, button_type
+        };
+      },
+    };
+    const app = Vue.createApp(App);
+    app.use(vant);
+    app.mount("#app");
+  </script>
+</body>
+
+</html>
