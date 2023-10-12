@@ -125,3 +125,49 @@ JSP指令语法格式：
 ### 控制流语句
 
 >  JSP提供对Java语言的全面支持。您可以在JSP程序中使用Java API甚至建立Java代码块，包括判断语句和循环语句等等。
+
+## 作用域
+
+> 在Java中，有四个预定义的域（作用域）可用于在JSP页面和Servlet之间传递数据。这些域是：
+
+1. Page Scope（页面作用域）：该作用域仅在当前页面内有效，在同一个请求期间共享。当响应发送到客户端后，页面作用域失效。
+2. Request Scope（请求作用域）：该作用域从一次HTTP请求开始到相应的HTTP响应结束期间有效。在同一个请求处理期间，不同的Servlet和JSP页面可以通过这个作用域共享数据。
+3. Session Scope（会话作用域）：该作用域在用户会话启动时创建，并且在用户关闭浏览器或超过指定时间段后失效。它允许跨多个请求存储和检索用户特定的信息。
+4. Application Scope（应用程序作用域）：该作用域与Web应用程序的整个生命周期相关联。只要Web应用程序处于活动状态，所有的Servlet和JSP都能够访问相同的Application Scope下的属性值。
+
+对于每种作用域，你可以使用以下方式来设置和获取属性值：
+
+- 设置属性值：
+  - 在Page范围内: `<% pageContext.setAttribute("attributeName", attributeValue); %>`
+  - 在Request范围内: `<% request.setAttribute("attributeName", attributeValue); %>`
+  - 在Session范围内: `<% session.setAttribute("attributeName", attributeValue); %>`
+  - 在Application范围内: `<% application.setAttribute("attributeName", attributeValue); %>`
+- 获取属性值：
+  - 从Page范围获取: `<%= pageContext.getAttribute("attributeName") %>`
+  - 从Request范围获取: `<%= request.getAttribute("attributeName") %>`
+  - 从Session范围获取: `<%= session.getAttribute("attributeName") %>`
+  - 从Application范围获取: `<%= application.getAttribute("attributeName") %>`
+
+注意，上述示例中的`"attributeName"`是你为属性指定的名称（可以自定义），而`attributeValue`则是你要设置的具体值。
+
+通过使用这些作用域和对应的方法，你可以在JSP页面和Servlet之间有效地共享数据。
+
+## EL表达式
+
+> 使用前需要在头部标识 
+>
+> ```
+> <%@ page isELIgnored="false" %> # 禁止忽略el表达式
+> <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 引入变量
+> ```
+
+### 添加maven依赖
+
+```java
+<dependency>
+    <groupId>org.glassfish.web</groupId>
+    <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+    <version>3.0.1</version>
+</dependency>
+```
+
