@@ -167,7 +167,79 @@ JSP指令语法格式：
 <dependency>
     <groupId>org.glassfish.web</groupId>
     <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-    <version>3.0.1</version>
+    <version>2.0.0</version>
 </dependency>
+```
+
+
+
+## Beans工具
+
+### 添加依赖
+
+```xml
+<!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
+<dependency>
+    <groupId>commons-beanutils</groupId>
+    <artifactId>commons-beanutils</artifactId>
+    <version>1.9.4</version>
+</dependency>
+```
+
+### setProperty
+
+> 这个方法可以将数据添加到指定beans中
+
+示例代码
+
+```java
+import org.apache.commons.beanutils.BeanUtils;
+
+// ...
+
+// 获取表单参数或其他方式获取用户输入的数据
+String username = request.getParameter("username");
+String password = request.getParameter("password");
+
+// 创建User对象
+User user = new User();
+
+try {
+    // 使用BeanUtils给User对象设置属性值
+    BeanUtils.setProperty(user, "username", username);
+    BeanUtils.setProperty(user, "password", password);
+} catch (Exception e) {
+    // 处理异常情况，例如属性不存在等
+}
+
+// 现在user对象包含了从浏览器提交的数据
+```
+
+### populate
+
+> 使用populate 方法可以直接将数据全部拷贝过去 数据结构需要一一对应
+
+示例方法
+
+```java
+import org.apache.commons.beanutils.BeanUtils;
+import java.util.Map;
+
+// ...
+
+// 获取表单参数或其他方式获取用户输入的数据，并将其存储在一个包含字段名和值的Map中
+Map<String, String[]> parameterMap = request.getParameterMap();
+
+// 创建User对象
+User user = new User();
+
+try {
+    // 使用BeanUtils.populate()将传入的parameterMap中数据封装到user对象中
+    BeanUtils.populate(user, parameterMap);
+} catch (Exception e) {
+    // 处理异常情况，例如属性不存在等
+}
+
+// 现在user对象包含了从浏览器提交的数据
 ```
 
