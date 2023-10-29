@@ -1,0 +1,223 @@
+<!--
+ * @Author: love-yuri yuri2078170658@gmail.com
+ * @Date: 2023-10-28 19:46:51
+ * @LastEditTime: 2023-10-29 10:43:59
+ * @Description: 实验5
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>092221208廖华勇-</title>
+  <link rel="stylesheet" href="./css/index.css" />
+  <link rel="stylesheet" href="./css/my.css" />
+  <script src="./js/vue@3"></script>
+  <script src="./js/vant.min.js"></script>
+  <script src="./js/tailwindcss.js"></script>
+
+</head>
+
+<body>
+  <div id="app" class="w-screen xl:w-[640px]">
+    <van-nav-bar :title="currentView ? '图书添加' : '图书管理'" :left-text="'返回'" :right-text="!currentView ? '图书添加' : '图书管理'"
+      @click-left="currentView = !currentView" @click-right="currentView = !currentView" left-arrow></van-nav-bar>
+    <van-form @submit="showAddBook = true" v-if="currentView">
+      <van-cell-group inset>
+        <!-- 录入图书信息 -->
+        <template v-for="(item, index) in book" :key="index">
+          <van-field v-model="item.value" :label="item.label" class="text-[16px]"
+            :rules="[{ required: true, message: '请填写 ' + item.label }]">
+          </van-field>
+        </template>
+      </van-cell-group>
+
+      <!-- 提交 -->
+      <div style="margin: 16px;">
+        <van-button round block class="bg-slate-500 text-[18px]" type="primary" native-type="submit">
+          图书入库
+        </van-button>
+      </div>
+    </van-form>
+
+    <!-- 显示图书信息 -->
+    <div v-else>
+      <div class="flex">
+        <span class="w-[10%] text-center">序号</span>
+        <span class="w-[40%] text-center cursor-pointer" @click="sortData('bookName')">图书名称</span>
+        <span class="w-[20%] text-center cursor-pointer" @click="sortData('bookPrice')">图书价格</span>
+        <span class="w-[30%] text-center">操作</span>
+      </div>
+      <div class="w-full h-1 bg-[#9999] mt-4 mb-4"></div>
+      <div class="flex mb-3" v-for="(book, index) in books" :key="index" >
+        <div class="w-[10%] text-center" @click="clickRow(index)">
+          <span @click.stop> {{ index + 1}}</span>
+        </div>
+        <div class="w-[40%] text-center" @click="clickRow(index)">
+          <span @click.stop>{{ book.bookName }}</span>
+        </div>
+        <div class="w-[20%] text-center" @click="clickRow(index)">
+          <span @click.stop>{{ book.bookPrice}}</span>
+        </div>
+        <div class="w-[30%] text-center" @click.stop="clickRow(index)">
+          <a href="#" class="text-blue-700 text-[16px]" @click.prevent.stop="editBook(index)">编辑</a>
+          <a href="#" class="text-16px ml-1 text-red-500 cursor-pointer" @click.prevent.stop="delBook(index)">删除</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 显示是否添加图书 -->
+    <van-dialog v-model:show="showAddBook" title="是否添加图书?" class="w-[95%] xl:w-[540px]" @confirm="onSubmit" show-cancel-button>
+      <template v-for="(item, index) in book" :key="index">
+        <van-cell :title="item.name" :value="item.value"></van-cell>
+      </template>
+    </van-dialog>
+
+    <!-- 图书编辑 -->
+    <van-dialog v-model:show="showEditBook" class="w-[95%] xl:w-[540px] noConfirm">
+      <van-form @submit="EditBook">
+        <van-cell-group inset>
+          <!-- 录入图书信息 -->
+          <template v-for="(item, index) in book" :key="index">
+            <van-field v-model="currentBook[item.name]" :readonly="isReadOnly" :label="item.label" class="text-[16px]"
+              :rules="[{ required: true, message: '请填写 ' + item.label }]">
+            </van-field>
+          </template>
+        </van-cell-group>
+        <!-- 提交 -->
+        <div class="m-[16px] flex text-[18px] justify-between">
+          <van-button round block class="bg-slate-500 border-none" type="primary" @click="showEditBook = false">
+            取消
+          </van-button>
+          <div :class="[isReadOnly ? '' : 'w-4']"></div>
+          <van-button v-if="!isReadOnly" round block class="bg-blue-700 border-none" type="primary" native-type="submit">
+            确认
+          </van-button>
+        </div>
+      </van-form>
+    </van-dialog>
+  </div>
+  <script>
+    const { createApp, ref, reactive } = Vue;
+    const { NavBar, showToast, showConfirmDialog } = vant;
+
+    // 当前界面
+    const currentView = ref(true);
+    const clickRight = () => {
+      currentView.value = !currentView.value
+    };
+
+    // 添加图书
+    const showAddBook = ref(false);
+    const bookname = ref('');
+    const book = reactive([
+      { name: 'bookName', label: '图书名称', value: '', },
+      { name: 'publisherName', label: '出版社名称', value: '', },
+      { name: 'bookPrice', label: '图书价格', value: '', },
+      { name: 'bookNum', label: '图书册数', value: '', }
+    ]);
+    const onSubmit = () => {
+      showAddBook.value = true;
+      let newBook = {};
+      book.forEach(i => {
+        newBook[i.name] = i.value;
+      });
+      books.push(newBook);
+      showToast('添加成功');
+      localStorage.setItem("bookList", JSON.stringify(books));
+    };
+
+    // 编辑查看图书信息
+    const currentBook = ref({});
+    const currentBookIndex = ref(0);
+    const books = reactive([
+      { bookName: '数据结构和算法', publisherName: '新华出版社', bookPrice: 22.3, bookNum: 30 },
+      { bookName: 'C++程序设计', publisherName: '新华出版社', bookPrice: 22.3, bookNum: 30 },
+      { bookName: 'Java程序设计', publisherName: '新华出版社', bookPrice: 22.3, bookNum: 30 },
+      { bookName: 'Python程序设计', publisherName: '新华出版社', bookPrice: 22.3, bookNum: 30 },
+    ]);
+
+    // 删除图书
+    const delBook = (index) => {
+      showConfirmDialog({
+        title: '高危行为',
+        message: '是否删除？',
+      }).then(() => {
+        books.splice(parseInt(index), 1);
+        showToast('删除成功!');
+        localStorage.setItem("bookList", JSON.stringify(books));
+      }).catch(() => {
+        // on cancel
+      });
+    };
+
+    // 编辑图书
+    const showEditBook = ref(false);
+    const isReadOnly = ref(false);
+    const editBook = (index) => {
+      isReadOnly.value = false;
+      showEditBook.value = true;
+      currentBookIndex.value = index;
+      currentBook.value = JSON.parse(JSON.stringify(books))[index];
+    };
+    const EditBook = () => {
+      showEditBook.value = false;
+      books[currentBookIndex.value] = currentBook.value;
+      localStorage.setItem("bookList", JSON.stringify(books));
+    };
+
+    // 点击行
+    const clickRow = (index) => {
+      isReadOnly.value = true;
+      showEditBook.value = true;
+      currentBook.value = books[index];
+      localStorage.setItem("bookList", JSON.stringify(books));
+    };
+
+    // 数据排序
+    let sortMap = new Map();
+    sortMap.set('bookName', true);
+    sortMap.set('bookPrice', true);
+    const sortData = (key) => {
+      const sortRule = (a, b, key, k, isCn) => {
+        let val1 = a[key], val2 = b[key];
+        if(isCn) {
+          if(k) {
+            return val2.localeCompare(val1, 'zh');
+          }
+          return val1.localeCompare(val2, 'zh');
+        }
+        return k ? val1 - val2 : val2 - val1;
+      }
+      let rule = sortMap.get(key);
+      sortMap.set(key, !rule);
+      books.sort((a, b) => sortRule(a, b, key, rule, key === 'bookName'));
+      localStorage.setItem("bookList", JSON.stringify(books));
+    };
+    const App = {
+      data() {
+        return {
+          book, onSubmit, showAddBook, bookname, EditBook,
+          currentView, books, delBook, clickRow, isReadOnly,
+          clickRight, editBook, showEditBook, currentBook, sortData
+        };
+      },
+      mounted() {
+        // localStorage.removeItem('bookList');
+        let bookList = JSON.parse(localStorage.getItem("bookList"));
+        if (bookList == null || bookList.length == 0) {
+          localStorage.setItem("bookList", JSON.stringify(books));
+        } else {
+          books.length = 0;
+          books.push(...bookList);
+        }
+      },
+    };
+    const app = Vue.createApp(App);
+    app.use(vant);
+    app.mount("#app");
+  </script>
+</body>
+
+</html>
