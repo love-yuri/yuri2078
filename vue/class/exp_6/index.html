@@ -1,0 +1,269 @@
+<!--
+ * @Author: love-yuri yuri2078170658@gmail.com
+ * @Date: 2023-09-27 13:29:27
+ * @LastEditTime: 2023-11-04 22:20:54
+ * @Description: 实验6
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>092221208廖华勇-实验6</title>
+  <link rel="stylesheet" href="./css/index.css" />
+  <link rel="stylesheet" href="./css/my.css" />
+  <script src="./js/vue@3"></script>
+  <script src="./js/vant.min.js"></script>
+  <script src="./js/tailwindcss.js"></script>
+
+</head>
+
+<body>
+  <div id="app" class="w-screen xl:w-[640px]">
+    <div class="h-screen">
+      <div class="h-[30%] bg-[#2C87EB] flex items-center justify-center relative" v-if="currentPage === 0">
+        <img src="./assets/avator.jpg" class="w-[200px] h-[200px] rounded-[100px]" />
+        <div class="border h-[300px] absolute w-[90%] flex items-center justify-center bottom-[-250px] bg-white z-10 rounded-[30px]">
+          <van-form class="w-full" @submit="currentPage = 1">
+            <van-cell-group inset>
+              <van-field 
+                class="border rounded-[12px]"
+                left-icon="user-o"
+                placeholder="请输入账号..."
+                v-model="username" 
+                :rules="rules">
+              </van-field>
+              <van-field 
+                class="border rounded-[12px] mt-4"
+                left-icon="notes-o" 
+                type="password" 
+                placeholder="请输入密码..." 
+                v-model="password"
+                :rules="rules">
+              </van-field>
+            </van-cell-group>
+            <div style="margin: 16px;">
+              <van-button round block type="primary" native-type="submit" class="bg-[#00a9ff] h-[60px] text-[20px]">
+                登录
+              </van-button>
+            </div>
+          </van-form>
+        </div>
+      </div>
+      <div v-else-if="currentPage > 0" class="flex flex-col h-full">
+        <div :class="`flex items-center justify-center h-16 text-[22px] text-white bg-[${themeStyle[theme].color}]`">
+          <van-icon name="arrow-left" class="ml-4" @click="currentPage = 0"></van-icon>
+          <span class="text-center flex-1"> {{ buttomInfo[buttomPath].title }} </span>
+        </div>
+        <div class="flex-1" v-if="buttomPath === 1">
+          <van-form @submit="addData">
+            <van-cell-group inset>
+              <van-field
+                v-for="(info, index) in inputInfo" :key="index"
+                v-model="info.value"
+                :label="info.label"
+                :placeholder="info.holder"
+                :rules="[{ 
+                  required: true, 
+                  message: `${info.label}错误！`, 
+                  pattern: info.pattern 
+                }]"
+              ></van-field>
+            <div class="m-[16px]">
+              <van-button round block type="primary" native-type="submit" :class="`bg-[${themeStyle[theme].color}]`">
+                录入
+              </van-button>
+            </div>
+          </van-form>
+        </div>
+        <div class="flex-1" v-if="buttomPath === 0"></div>
+        <div class="flex-1" v-if="buttomPath === 2">
+          <div class="p-2">
+            <div class="flex flex-row justify-between pl-4 pr-4">
+              <span class="flex-1 text-center">编号</span>
+              <span class="flex-1 text-center">任课教师</span>
+              <span class="flex-1 text-center">课程名称</span>
+              <span class="flex-1 text-center">课程类型</span>
+              <span class="flex-1 text-center">考核类型</span>
+              <span class="flex-1 text-center">考核方式</span>
+            </div>
+            <div class="">
+              <div v-for="(item, index) in course" :key="index" class="flex flex-row justify-between pl-4 pr-4">
+                <van-swipe-cell class="flex-1">
+                  <div class="h-8 flex-1 flex items-center">
+                    <div class="flex-1 text-center"> {{ index + 1 }} </div>
+                    <div v-for="(val, key) in item" :key="key" :class="[
+                      'flex-1 text-center',
+                      ['必修', '考试'].includes(val) ? 'text-red-700' : '',
+                      val === '笔试' ? 'text-green-600' : '',
+                      val === '机试' ? 'text-blue-700' : '',
+                      val === '大作业' ? 'text-yellow-300' : '',
+                    ]">
+                      {{ val }} 
+                    </div>
+                  </div>
+                  <template #right>
+                    <div class="flex items-center h-full text-white">
+                      <span class="bg-blue-700 p-2 cursor-pointer" @click.stop="editCourse(index)">编辑</span>
+                      <span class="bg-red-700 p-2 cursor-pointer" @click.stop="delCourse(index)">删除</span>
+                    </div>
+                  </template>
+                </van-swipe-cell>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex-1" v-if="buttomPath === 3">
+          <div class="grid grid-cols-2 gap-2 p-3">
+            <div v-for="(item, index) in themeStyle" 
+              :key="index" 
+              @click="theme = index"
+              :class="`flex items-center justify-center text-white font-semibold text-[20px] h-12 bg-[${item.color}]`">
+              {{ item.name }}
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-between pl-5 pr-5">
+          <template v-for="(info, index) in buttomInfo" :key="index">
+            <div class="flex flex-col justify-center items-center" @click="buttomPath = index">
+              <van-icon :name="info.icon" :color="`${buttomPath === index ? themeStyle[theme].color : ''}`" size="35px"></van-icon>
+              <span :class="`${buttomPath === index ? `text-[${themeStyle[theme].color}]` : ''}`"> {{ info.name }} </span> 
+            </div>
+          </template>
+        </div>
+      </div> 
+    </div>
+
+    <van-dialog v-model:show="showEditCourse" class="w-[95%] xl:w-[540px] noConfirm">
+      <van-form @submit="updateDate">
+        <van-cell-group inset>
+          <van-field
+            v-for="(info, index) in inputInfo" :key="index"
+            v-model="info.value"
+            :label="info.label"
+            :placeholder="info.holder"
+            :rules="[{ 
+              required: true, 
+              message: `${info.label}错误！`, 
+              pattern: info.pattern 
+            }]"
+          ></van-field>
+        <div class="m-[16px]">
+          <van-button round block type="primary" native-type="submit" :class="`bg-[${themeStyle[theme].color}]`">
+            更新
+          </van-button>
+        </div>
+      </van-form>
+    </van-dialog>
+  </div>
+  <script>
+    const { createApp, ref, reactive } = Vue;
+    const { NavBar, SwipeCell, showConfirmDialog, showToast } = vant;
+
+    const username = ref('');
+    const password = ref('');
+    const currentPage = ref(0);
+    const buttomPath = ref(1);
+    const currentCourse = ref(0);
+    const showEditCourse = ref(false);
+    const buttomInfo = ref([
+      { name: '回到主页', icon: 'home-o', title: '课程考核信息录入' },
+      { name: '录入数据', icon: 'add-o', title: '课程考核信息' },
+      { name: '编辑数据', icon: 'home-o', title: '课程考核信息' },
+      { name: '系统设置', icon: 'setting-o', title: '设置界面风格' },
+    ]);
+
+    const theme = ref(0);
+    const themeStyle = ref([
+      { name: '新绿', color: '#2BBF69'},
+      { name: '现代', color: '#2A86EB'},
+      { name: '优雅', color: '#F1792D'},
+      { name: '清新', color: '#52C8E9'},
+    ]);
+    
+    const rules = ref([
+      { required: true, message: '请填写' }
+    ]);
+
+    const inputInfo = reactive([
+      { label : '任课教师', value: '', holder: '输入任课教师', pattern:  /^.{1,20}$/},
+      { label : '课程名称', value: '', holder: '输入课程名称', pattern:  /.{1,20}/ },
+      { label : '课程类型', value: '', holder: '输入课程类型 (必修， 选修)', pattern:  /^必修|选修$/ },
+      { label : '考核类型', value: '', holder: '输入考核类型 (考试， 考察)', pattern:  /^考试|考察$/ },
+      { label : '考核方式', value: '', holder: '输入考核方式 (笔试，机试，大作业等)', pattern:  /^笔试|机试|大作业$/ },
+    ]);
+
+    const course = ref([]);
+
+    const onSubmit = () => {
+
+    };
+    const addData = () => {
+      let info = inputInfo;
+      let newCourse = {};
+      info.forEach(element => {
+        newCourse[element.label] = element.value;
+      });
+      course.value.push(newCourse);
+      localStorage.setItem("courses", JSON.stringify(course.value));
+      setTimeout(() => {
+        showToast('添加成功!!!');
+      }, 300);
+    };
+    const delCourse = (index) => {
+      showConfirmDialog({
+        title: '高危行为',
+        message: '是否删除？',
+      }).then(() => {
+        course.value.splice(parseInt(index), 1);
+        showToast('删除成功!');
+        localStorage.setItem("courses", JSON.stringify(course.value));
+      }).catch(() => {
+        // on cancel
+      });
+    };
+    const editCourse = (index) => {
+      showEditCourse.value = true;
+      let info = inputInfo;
+      info.forEach(element => {
+        element.value = course.value[index][element.label];
+      });
+      currentCourse.value = index;
+    };
+    const tempCourse = ref({});
+    const updateDate = () => {
+      let info = inputInfo;
+      info.forEach(element => {
+        tempCourse.value[element.label] = element.value;
+      });
+      course.value[currentCourse.value] = tempCourse.value;
+      showEditCourse.value = false;
+      localStorage.setItem("courses", JSON.stringify(course.value));
+    };
+    const App = {
+      data() {
+        return {
+          rules, username, password, currentPage,currentCourse,
+          buttomInfo, buttomPath, addData,delCourse,editCourse,
+          theme, themeStyle, inputInfo, course, showEditCourse, updateDate
+        };
+      },
+      mounted() {
+        // localStorage.removeItem('courses');
+        let courses = JSON.parse(localStorage.getItem("courses"));
+        if (courses == null || courses.length == 0) {
+          localStorage.setItem("courses", JSON.stringify(course.value));
+        } else {
+          course.value.length = 0;
+          course.value.push(...courses);
+        }
+      },
+    };
+    const app = Vue.createApp(App);
+    app.use(vant);
+    app.mount("#app");
+  </script>
+</body>
+
+</html>

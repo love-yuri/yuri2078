@@ -1,0 +1,88 @@
+<!--
+ * @Author: love-yuri yuri2078170658@gmail.com
+ * @Date: 2023-09-27 13:29:27
+ * @LastEditTime: 2023-10-31 12:33:02
+ * @Description: 初始化
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>092221208廖华勇-</title>
+  <link rel="stylesheet" href="./css/index.css" />
+  <link rel="stylesheet" href="./css/my.css" />
+  <script src="./js/vue@3"></script>
+  <script src="./js/vant.min.js"></script>
+  <script src="./js/tailwindcss.js"></script>
+
+</head>
+
+<body>
+  <div id="app" class="w-screen xl:w-[640px] flex flex-col h-screen">
+    <div class="h-[70px] flex justify-between p-4 items-center">
+      <button class="btn" @click="isBlod = !isBlod">B</button>
+      <button class="btn" @click="isItalic = !isItalic">I</button>
+      <button class="btn" @click="isUnderline = !isUnderline">U</button>
+      <button class="btn" @click="changeFont(true)">F+</button>
+      <button class="btn" @click="changeFont(false)">F-</button>
+      <div>{{ fontSize }}</div>
+      <div :class="['w-[40px] h-[40px]', `bg-[${color[currentColor]}]`]" @click="currentColor = (currentColor + 1) % 4"></div>
+    </div>
+    <div class="flex-1 bg-slate-300">
+      <textarea :class="[
+        isUnderline ? 'underline underline-offset-4' : '',
+        isBlod ? 'font-bold' : '',
+        isItalic ? 'italic' : '',
+        `text-[${fontSize}px]`,
+        `text-[${color[currentColor]}]`,
+        'w-full h-80 border p-3'
+      ]"></textarea>
+    </div>
+  </div>
+  <script>
+    const { createApp, ref, reactive } = Vue;
+    const { NavBar, showDialog } = vant;
+    const isBlod = ref(false);
+    const isUnderline = ref(false);
+    const isItalic = ref(false);
+    const fontSize = ref(20);
+    const currentColor = ref(0);
+    const color = ref([
+      '#000000',
+      '#66ff99',
+      '#00cc99',
+      '#99ccff',
+      '#00ffcc'
+    ]);
+    const changeFont = (flag) => {
+      flag ? fontSize.value++ : fontSize.value--;
+      if(fontSize.value > 80 || fontSize.value < 20) {
+        if(fontSize.value > 20) {
+          showDialog({
+            message: '字体不能超过80',
+          });
+          fontSize.value--;
+        } else {
+          showDialog({
+            message: '字体不能小于20',
+          });
+          fontSize.value++;
+        }
+      }
+    };
+    const App = {
+      data() {
+        return {
+          isBlod, isUnderline, isItalic, fontSize, currentColor, color, changeFont
+        };
+      },
+    };
+    const app = Vue.createApp(App);
+    app.use(vant);
+    app.mount("#app");
+  </script>
+</body>
+
+</html>
