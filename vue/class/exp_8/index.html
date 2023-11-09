@@ -1,0 +1,48 @@
+<!--
+ * @Author: love-yuri yuri2078170658@gmail.com
+ * @Date: 2023-09-27 13:29:27
+ * @LastEditTime: 2023-11-09 11:51:28
+ * @Description: 初始化
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>092221208廖华勇-</title>
+  <link rel="stylesheet" href="./css/index.css" />
+  <link rel="stylesheet" href="./css/my.css" />
+  <script src="./js/vue@3"></script>
+  <script src="./js/vant.min.js"></script>
+  <script src="./js/tailwindcss.js"></script>
+
+</head>
+
+<body>
+  <div id="app" class="w-screen xl:w-[640px]">
+    <van-nav-bar class="!bg-[#398D2E]" title="便签" right-text="设置"></van-nav-bar>
+    <van-floating-bubble
+      class="bg-gray-300"
+      axis="xy"
+      icon="plus"
+      magnetic="x"
+    ></van-floating-bubble>
+  </div>
+  
+  <script>
+    const { createApp, ref } = Vue;
+    const { NavBar, FloatingBubble, showToast } = vant;
+    const App = {
+      data() {
+        return {
+        };
+      },
+    };
+    const app = Vue.createApp(App);
+    app.use(vant);
+    app.mount("#app");
+  </script>
+</body>
+
+</html>
