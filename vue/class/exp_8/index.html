@@ -1,7 +1,7 @@
 <!--
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-27 13:29:27
- * @LastEditTime: 2023-11-09 11:51:28
+ * @LastEditTime: 2023-11-12 19:51:24
  * @Description: 初始化
 -->
 <!DOCTYPE html>
@@ -10,7 +10,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>092221208廖华勇-</title>
+  <title>092221208廖华勇-实验8</title>
   <link rel="stylesheet" href="./css/index.css" />
   <link rel="stylesheet" href="./css/my.css" />
   <script src="./js/vue@3"></script>
@@ -20,23 +20,204 @@
 </head>
 
 <body>
-  <div id="app" class="w-screen xl:w-[640px]">
-    <van-nav-bar class="!bg-[#398D2E]" title="便签" right-text="设置"></van-nav-bar>
+  <div id="app" class="w-screen xl:w-[640px] flex flex-col h-full">
+    <van-nav-bar 
+      class="!bg-[#398D2E]" 
+      title="便签" 
+      @click-right="clickRight"
+      @click-left="show = false, isSettings = false"
+      :left-text="`${show ? '返回' : ''}`"
+      :right-text="`${show ? '添加' : isSettings ? '返回' : '设置'}`">
+    </van-nav-bar>
+    <div class="flex-1 flex flex-col">
+      <div :class="`${show ? 'h-64' : 'h-0'} bg-white duration-200 overflow-hidden`">
+        <van-field v-model="money" label="输入金额" placeholder="请输入金额"></van-field>
+        <van-field
+          v-model="addTime"
+          is-link
+          readonly
+          label="选择时间"
+          placeholder="点击选择时间"
+          @click="showTimePicker = true"
+        ></van-field>
+        <van-popup v-model:show="showTimePicker" position="bottom" class="w-full">
+          <van-date-picker @confirm="onConfirm" @cancel="showTimePicker = false" />
+        </van-popup>
+        <van-field name="radio" label="选择类别">
+          <template #input>
+            <van-radio-group v-model="chooseType" direction="horizontal">
+              <van-radio name="收入">收入</van-radio>
+              <van-radio name="支出">支出</van-radio>
+            </van-radio-group>
+          </template>
+        </van-field>
+
+        <van-field
+          v-model="addNotes"
+          is-link
+          readonly
+          label="选择事项"
+          placeholder="点击选择事项"
+          @click="showNotesPicker = true"
+        ></van-field>
+        <van-popup v-model:show="showNotesPicker" position="bottom">
+          <van-picker
+            :columns="columns"
+            @confirm="onNotesConfirm"
+            @cancel="showNotesPicker = false"
+          ></van-picker>
+        </van-popup>
+      </div>
+      <div v-show="!show && !isSettings && notes.length !== 0">
+        <div class="text-center mt-4 mb-4">已经添加事项列表</div>
+        <div class="flex p-2" v-for="(note, index) in notes" :key="index">
+          <span class="w-[10%]"> {{ index + 1 }} </span>
+          <span class="w-[30%]"> {{ note.time }} </span>
+          <span class="w-[20%]"> {{ note.type }} </span>
+          <span class="w-[20%]"> {{ note.note }} </span>
+          <span class="w-[20%]"> {{ note.money }} </span>
+        </div>
+      </div>
+      <div v-show="isSettings && !show" class="p-4" name="user_search">
+        <div class="flex items-center justify-between">
+          <input type="text" class="border-[3px] flex-1 mr-4 rounded-sm" v-model="newNotes" placeholder="请输入增加的事务名称" />
+          <div @click="addNotesFun" class="bg-green-700 text-white font-semibold pl-2 pr-2 rounded-md cursor-pointer">增加</div>
+        </div>
+        <div>
+          <div class="text-center mt-4">事务列表</div>
+          <div v-for="(col, index) in columns" :key="col.value" class="flex mt-2">
+            <span class="w-[10%]"> {{ index + 1 }} </span>
+            <span class="flex-1"> {{ col.text }} </span>
+            <div 
+              @click="delNotes(index)"
+              class="bg-red-700 text-white font-semibold pl-2 pr-2 rounded-md cursor-pointer">
+              删除
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      <div :class="`${show ? 'flex-1' : 'h-0'} bg-[#3D3C3E] duration-200`"></div>
+    </div>
+    
+    <!-- 浮动气泡  -->
     <van-floating-bubble
-      class="bg-gray-300"
+      class="bg-green-500 drop-shadow-xl"
       axis="xy"
       icon="plus"
       magnetic="x"
+      @click="show = !show"
     ></van-floating-bubble>
   </div>
   
   <script>
     const { createApp, ref } = Vue;
     const { NavBar, FloatingBubble, showToast } = vant;
+    const show = ref(false);
+
+    /* 数据录入 */
+    const money = ref('');
+    const addTime = ref('');
+    const chooseType = ref('');
+    const addNotes = ref('');
+
+    /* 选择器 */
+    const showTimePicker = ref(false);
+    const onConfirm = ({ selectedValues }) => {
+      addTime.value = selectedValues.join('/');
+      showTimePicker.value = false;
+    };
+
+    const showNotesPicker = ref(false);
+    const columns = ref([
+      { text: '选择事项', value: '选择事项' },
+      { text: '外卖', value: '外卖' },
+    ]);
+
+    const onNotesConfirm = ({ selectedOptions }) => {
+      addNotes.value = selectedOptions[0]?.text;
+      showNotesPicker.value = false;
+      localStorage.setItem("vue_exp8", JSON.stringify(columns.value));
+    };
+
+    /* 已添加事项 */
+    const notes = ref([]);
+
+    const clickRight = () => {
+      if(show.value) {
+        notes.value.push({
+          time: addTime.value,
+          type: chooseType.value,
+          note: addNotes.value, 
+          money: money.value,
+        });
+        localStorage.setItem("vue_exp8", JSON.stringify(notes.value));
+        setTimeout(() => {
+          showToast('添加成功!');
+          show.value = false;
+        }, 300);
+        return;
+      }
+      if(isSettings.value) {
+        show.value = true;
+        isSettings.value = false;
+      }
+      isSettings.value = true;
+      
+    };
+
+    /* 设置 */
+    const isSettings = ref(false);
+    const newNotes = ref('');
+    const addNotesFun = () => {
+      let flag = true;
+      columns.value.forEach(element => {
+        if(element.text === newNotes.value) {
+          flag = false;
+          showToast('该事项已经存在!');
+          return;
+        }
+      });
+      if(flag) {
+        columns.value.push({
+          text: newNotes.value,
+          value: newNotes.value
+        });
+      }
+    };
+
+    const delNotes = (index) => {
+      columns.value.splice(parseInt(index), 1);
+      localStorage.setItem("vue_exp8_col", JSON.stringify(columns.value));
+    };
+    
     const App = {
       data() {
         return {
+          show, money, addTime, chooseType, addNotes, columns,
+          showTimePicker, onConfirm, showNotesPicker, onNotesConfirm,
+          clickRight, notes, isSettings, newNotes, addNotesFun, delNotes
         };
+      },
+      mounted() {
+        // localStorage.removeItem('vue_exp8');
+        let courses = JSON.parse(localStorage.getItem("vue_exp8"));
+        if (courses == null || courses.length == 0) {
+          localStorage.setItem("vue_exp8", JSON.stringify(notes.value));
+        } else {
+          notes.value.length = 0;
+          notes.value.push(...courses);
+        }
+        {
+          // localStorage.removeItem('vue_exp8_col');
+          let courses = JSON.parse(localStorage.getItem("vue_exp8_col"));
+          if (courses == null || courses.length == 0) {
+            localStorage.setItem("vue_exp8_col", JSON.stringify(columns.value));
+          } else {
+            columns.value.length = 0;
+            columns.value.push(...courses);
+          }
+        }
       },
     };
     const app = Vue.createApp(App);
