@@ -1,0 +1,40 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: gray;
+}
+
+#app {
+  background-color: white;
+  height: 100%;
+  min-height: 100vh;
+}
+
+.van-cell__value {
+  color: black;
+  font-weight: 600;
+  flex: 3;
+  text-align: left;
+}
+
+.van-cell {
+  padding-left: 0;
+}
+
+.tag {
+  position: absolute;
+  left: 8px;
+  top: 12px;
+  padding: 0px 10px;
+  background-color: #E15848;
+  color: white;
+  border-radius: 0 20px 20px 0;
+}

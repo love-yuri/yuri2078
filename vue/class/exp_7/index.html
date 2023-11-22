@@ -1,0 +1,281 @@
+<!--
+ * @Author: love-yuri yuri2078170658@gmail.com
+ * @Date: 2023-09-27 13:29:27
+ * @LastEditTime: 2023-11-19 14:58:34
+ * @Description: 初始化
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>092221208廖华勇-</title>
+  <link rel="stylesheet" href="./css/index.css" />
+  <link rel="stylesheet" href="./css/my.css" />
+  <script src="./js/vue@3"></script>
+  <script src="./js/vant.min.js"></script>
+  <script src="./js/tailwindcss.js"></script>
+
+</head>
+
+<body>
+  <div id="app" class="w-screen xl:w-[640px]">
+    <div class="h-screen flex flex-col items-center justify-center bg-slate-300" v-if="showHome">
+      <img src="./assets/icons/logo.svg" class="w-64 h-64" >
+      <div class="text-[84px] font-semibold">易加油</div>
+      <div class="text-[22px] font-medium">易起加油 享受生活</div>
+    </div>
+    <div v-else class="h-screen ">
+      <div class="h-full flex flex-col">
+        <!-- 顶部导航 -->
+        <div class="bg-[#3498F8] h-12 text-[22px] font-medium text-white flex items-center justify-center">加油记录添加</div>
+        <!-- 中间显示 -->
+        <div class="flex-1">
+          <div class="h-full p-3" v-show="showHistory">
+            <van-cell title="油品类型" :value="oilInfo.type.value"></van-cell>
+            <van-radio-group v-model="oilInfo.type.value" direction="horizontal">
+              <van-radio :name="type" v-for="(type, index) in oilTypeInfo" :key="index">
+                {{ type }}
+              </van-radio>
+            </van-radio-group>
+            <van-field class="mt-1" type="number" v-model="oilInfo.money.value" :label="oilInfo.money.name" :placeholder="`请输入${oilInfo.money.name}...`"></van-field>
+            <van-field class="mt-1" type="number" v-model="oilInfo.price.value" :label="oilInfo.price.name" :placeholder="`请输入${oilInfo.price.name}...`"></van-field>
+            <van-field class="mt-1" readonly v-model="oilInfo.num.value" :label="oilInfo.num.name" :placeholder="`请输入单价和金额`"></van-field>
+            <van-field class="mt-1" type="number" v-model="oilInfo.distance.value" :label="oilInfo.distance.name" :placeholder="`请输入${oilInfo.distance.name}...`"></van-field>
+            <van-field
+              v-model="oilInfo.date.value"
+              is-link
+              readonly
+              :label="oilInfo.date.name"
+              :placeholder="`点击选择${oilInfo.date.name}`"
+              @click="showDatePicker = true"
+            ></van-field>
+            <van-calendar :max-date="new Date()" :min-date="minDate()" v-model:show="showDatePicker" @confirm="onConfirm" ></van-calendar>
+            <div @click="addHistory" class="flex justify-center items-center h-12 bg-blue-500 cursor-pointer">
+              <span class="text-white text-[20px]">添加记录</span>
+            </div>
+          </div>
+          <div v-show="!showHistory" class="h-full p-3">
+            <div class="flex flex-wrap justify-center border-b-2 text-[14px]">
+              <div class="m-2 w-[27%] h-16 flex flex-col items-center justify-center" 
+                v-for="(info, key, index) in historyInfo" :key="index">
+                <van-icon :name="info.icon" size="40px" ></van-icon>
+                <span class="mt-1">{{ `${info.name} : ${info.comput} ${info.type}` }}</span>
+              </div>
+            </div>
+            <div class="text-center mt-2 mb-2 text-gray-500 text-[20px]">加油记录</div>
+            <div v-for="(item, index) in history" :key="item.name">
+              <div class="flex items-center">
+                <div class="relative p-2">
+                  <van-icon name="records" size="80px" color="#E35A49" ></van-icon>
+                  <span class="tag">
+                    {{ item.type }}
+                  </span>
+                </div>
+                <div class="flex-1">
+                  <span>{{ item.date }} </span>
+                  <div class="flex items-center text-[12px]">
+                    <span class="text-[#E96E7E] mr-2 border border-[#E96E7E] p-1 font-semibold rounded-md">
+                      单价: {{ item.price }} /元每升
+                    </span>
+                    <span class="text-[#E96E7E] mr-2 border border-[#E96E7E] p-1 font-semibold rounded-md">
+                      油量: {{ item.num }} 升
+                    </span>
+                    <span class="text-[#E96E7E] border border-[#E96E7E] p-1 font-semibold rounded-md">
+                      里程: {{ item.distance }} 公里
+                    </span>
+                  </div>
+                  <div class="mt-2">${{ parseFloat(item.money).toFixed(2) }}</div>
+                </div>
+                <van-icon name="delete-o" size="60px" class="cursor-pointer" @click="delHistory(index)"></van-icon>
+              </div>
+              <!-- {{ historyInfo[0].comput }} -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 底部菜单 -->
+        <div class="h-16 flex border-t-2">
+          <div 
+            @click="showHistory = false" 
+            :class="`${!showHistory ? 'bg-slate-400' : ''} flex cursor-pointer flex-col justify-center items-center flex-1 hover:bg-slate-300 duration-700`">
+            <img class="w-7 h-7" src="./assets/icons/history.svg" />
+            <span class="text-[20px] font-medium">查看记录</span>
+          </div>
+          <div 
+            @click="showHistory = true" 
+            :class="`${showHistory ? 'bg-slate-400' : ''} flex cursor-pointer flex-col justify-center items-center flex-1 hover:bg-slate-300 duration-700`">
+            <img class="w-7 h-7" src="./assets/icons/history.svg" />
+            <span class="text-[20px] font-medium">添加记录</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const { createApp, ref, reactive, computed, watch } = Vue;
+    const { NavBar, showToast,showNotify } = vant;
+
+
+    /* 展示首页 */
+    const showHome = ref(true);
+
+    /* 展示添加记录 */
+    const showHistory = ref(false);
+    const historyInfo = reactive({
+      allDistance: {
+        name: '总里程',
+        icon: 'underway-o',
+        type: 'KM',
+        comput: computed(() => {
+          return history.value.reduce((accumulator, currentValue) => 
+            accumulator + parseFloat(currentValue.distance), 
+          0).toFixed(2).toString()
+        })
+      },
+      allNum: {
+        name: '总耗油',
+        icon: 'newspaper-o',
+        type: 'L',
+        comput: computed(() => {
+          return history.value.reduce((accumulator, currentValue) => 
+            accumulator + parseFloat(currentValue.num), 
+          0).toFixed(2).toString()
+        })
+      },
+      allMoney: {
+        name: '总花费',
+        icon: 'refund-o',
+        type: '元',
+        comput: computed(() => {
+          return history.value.reduce((accumulator, currentValue) => 
+            accumulator + parseFloat(currentValue.money), 
+          0).toFixed(2).toString()
+        })
+      },
+      evgNum: {
+        name: '百公里油耗',
+        icon: 'free-postage',
+        type: 'L',
+        comput: computed(() => {
+          if(historyInfo.allNum.comput === '0.00' || historyInfo.allDistance.comput === '0.00') {
+            return '0.00';
+          }
+          return (historyInfo.allNum.comput / historyInfo.allDistance.comput * 100).toFixed(2).toString();
+        })
+      },
+      evgMoney: {
+        name: '百公里花费',
+        icon: 'after-sale',
+        type: '元',
+        comput: computed(() => {
+          if(historyInfo.allMoney.comput === '0.00' || historyInfo.allNum.comput === '0.00') {
+            return '0.00';
+          }
+          return (historyInfo.allMoney.comput / historyInfo.allNum.comput * 100).toFixed(2).toString();
+        })
+      },
+      evgPrice: {
+        name: '平均油价',
+        icon: 'cash-o',
+        type: '元',
+        comput: computed(() => {
+          if(historyInfo.allMoney.comput == '0.00' || historyInfo.allDistance.comput == '0.00') {
+            return '0.00';
+          }
+          return (historyInfo.allMoney.comput / historyInfo.allDistance.comput).toFixed(2).toString();
+        })
+      },
+    });
+
+    /* 信息记录 */
+    const oilTypeInfo = ['89号','92号','95号','98号']
+    const oilInfo = reactive({
+      type: { name: '油品类型', value: '92号' },
+      money: { name: '加油金额', value: '' },
+      price: { name: '加油单价', value: '' },
+      num: { name: '加油总量', value: computed(() => {
+        if(oilInfo.money.value === '' || oilInfo.price.value === '') {
+          return '';
+        }
+        return (oilInfo.money.value / oilInfo.price.value).toFixed(2).toString();
+      })},
+      distance: { name: '本次里程', value: '' },
+      date: { name: '加油日期', value: '' },
+    });
+
+    /* 处理记录 */
+    const history = ref([]);
+    const addHistory = () => {
+      history.value.push({
+        type : oilInfo.type.value,
+        money : oilInfo.money.value,
+        price : oilInfo.price.value,
+        num : oilInfo.num.value,
+        distance : oilInfo.distance.value,
+        date : oilInfo.date.value,
+      });
+      console.log(history.value);
+      showToast('添加成功!');
+      localStorage.setItem('vue_exp_7', JSON.stringify(history.value));
+    };
+
+    const delHistory = (index) => {
+      history.value.splice(parseInt(index), 1);
+      localStorage.setItem("vue_exp_7", JSON.stringify(history.value));
+    };
+
+    /* 处理时间 */
+    const showDatePicker = ref(false);
+    const minDate = () => {
+      currentDate = new Date();
+      return new Date(currentDate.setMonth(currentDate.getMonth() - 1));
+    }
+
+    const onConfirm = (date) => {
+      oilInfo.date.value = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+      showDatePicker.value = false;
+    };
+
+    watch(historyInfo.evgNum, () => {
+      if(historyInfo.evgNum.comput > 10) {
+        showNotify('平均油耗过高!!');
+      }
+    });
+
+    watch(oilInfo.num, () => {
+      if(oilInfo.num.value > 100) {
+        showNotify('加油量过高!!');
+      }
+    });
+    
+    const App = {
+      data() {
+        return {
+          showHome, oilInfo, oilTypeInfo, showDatePicker, onConfirm,
+          showHistory, historyInfo, addHistory, history, minDate, delHistory
+        };
+      },
+      mounted() {
+        setTimeout(() => {
+          showHome.value = false;
+        }, 1000);
+        minDate();
+        // localStorage.removeItem('vue_exp_7');
+        let courses = JSON.parse(localStorage.getItem("vue_exp_7"));
+        if (courses == null || courses.length == 0) {
+          localStorage.setItem("vue_exp_7", JSON.stringify(history.value));
+        } else {
+          history.value.length = 0;
+          history.value.push(...courses);
+        }
+      }
+    };
+    const app = Vue.createApp(App);
+    app.use(vant);
+    app.mount("#app");
+  </script>
+</body>
+
+</html>
