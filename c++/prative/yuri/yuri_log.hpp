@@ -24,6 +24,7 @@ inline static void logResult(const std::string &msg, std::ostream &cout) {
   std::endl(cout);
 }
 
+/* 将日志结果设置为写入文件 */
 inline static void setWriteInFile() {
   write_in_file = true;
 }
