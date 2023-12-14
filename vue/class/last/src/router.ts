@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-12-12 16:33:50
- * @LastEditTime: 2023-12-13 22:21:14
+ * @LastEditTime: 2023-12-14 10:10:33
  * @Description: 路由
  */
 import { createRouter, createWebHashHistory } from 'vue-router';
@@ -26,8 +26,6 @@ const router = createRouter({
     }
   ]
 });
-
-// const root_user = ['yuri', 'root'];
 
 router.beforeEach((to, from, next) => {
   if (to.fullPath.includes('home') && localStorage.getItem('currentUser') === null) {

@@ -1,7 +1,7 @@
 <!--
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-12-12 16:23:48
- * @LastEditTime: 2023-12-13 17:04:04
+ * @LastEditTime: 2023-12-14 18:20:49
  * @Description: 
 -->
 <template>
@@ -10,7 +10,7 @@
     <div class="mt-[16px]">
       <van-swipe :autoplay="3000" indicator-color="white">
         <van-swipe-item v-for="image in images" :key="image">
-          <img :src="image" />
+          <van-image :src="image" />
         </van-swipe-item>
       </van-swipe>
     </div>

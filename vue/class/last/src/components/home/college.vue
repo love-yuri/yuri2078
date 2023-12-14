@@ -1,7 +1,7 @@
 <!--
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-12-13 13:47:40
- * @LastEditTime: 2023-12-13 21:47:26
+ * @LastEditTime: 2023-12-14 11:40:23
  * @Description: 
 -->
 <template>
@@ -67,12 +67,11 @@ const fromatTime = (time: Date) => {
 };
 
 const borrow = () => {
-  let book: BookInfo = allBooks.find((item) => item.id === currentBook.value.id) as BookInfo;
-  book.borrow--;
-  let index = borrowBook.value.findIndex((item) => item.bookId === book.id);
+  currentBook.value.borrow--;
+  let index = borrowBook.value.findIndex((item) => item.bookId === currentBook.value.id);
   borrowBook.value.splice(index, 1);
   books.splice(
-    books.findIndex((item) => item.id === book.id),
+    books.findIndex((item) => item.id === currentBook.value.id),
     1
   );
   localStorage.setItem('borrowBook', JSON.stringify(borrowBook.value));
@@ -80,7 +79,9 @@ const borrow = () => {
   ElMessage.success('取消借阅成功');
   localStorage.setItem('bookInfos', JSON.stringify(allBooks));
   let histroys: History[] = JSON.parse(localStorage.getItem('borrowHistroy') as string);
-  let bookHistry: History = histroys.find((item) => item.book.id === book.id) as History;
+  let bookHistry: History = histroys.find(
+    (item) => item.book.id === currentBook.value.id
+  ) as History;
   bookHistry.returntime = fromatTime(new Date());
   bookHistry.status = 1;
   localStorage.setItem('borrowHistroy', JSON.stringify(histroys));

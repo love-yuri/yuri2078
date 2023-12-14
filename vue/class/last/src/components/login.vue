@@ -1,5 +1,11 @@
+<!--
+ * @Author: love-yuri yuri2078170658@gmail.com
+ * @Date: 2023-12-12 17:16:32
+ * @LastEditTime: 2023-12-14 11:02:29
+ * @Description: 
+-->
 <template>
-  <div class="w-[90%] bg-[#0089BA] rounded-[16px] p-2 flex flex-col justify-center">
+  <div class="w-full bg-[#0089BA] rounded-[16px] p-2 flex flex-col justify-center">
     <div class="text-white text-[20px] font-medium text-center">欢迎登陆</div>
     <van-form @submit="login">
       <van-field

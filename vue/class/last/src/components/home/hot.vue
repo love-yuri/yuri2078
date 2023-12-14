@@ -1,7 +1,7 @@
 <!--
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-12-13 13:47:40
- * @LastEditTime: 2023-12-13 21:42:42
+ * @LastEditTime: 2023-12-14 11:35:25
  * @Description: 
 -->
 <template>
@@ -82,8 +82,7 @@ const borrow = () => {
     ElMessage.error('您已经借阅过该书');
     return;
   }
-  let book: BookInfo = allBooks.find((item) => item.id === currentBook.value.id) as BookInfo;
-  book.borrow++;
+  currentBook.value.borrow++;
   borrowBook.value.push({
     bookId: currentBook.value.id,
     username: user.value?.username as string

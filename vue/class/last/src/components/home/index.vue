@@ -1,7 +1,7 @@
 <!--
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-12-12 18:59:21
- * @LastEditTime: 2023-12-13 21:58:37
+ * @LastEditTime: 2023-12-14 11:23:30
  * @Description: 主页
 -->
 <template>
@@ -24,7 +24,6 @@ import { ref, onMounted } from 'vue';
 const active = ref(0);
 
 onMounted(() => {
-  // 在组件或其他地方使用
   const currentUrl = window.location.href;
   const parts = currentUrl.split('/home/');
   if (parts.length > 1) {
