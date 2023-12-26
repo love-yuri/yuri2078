@@ -22,13 +22,14 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 const router = useRouter();
+
+import p1 from '/src/assets/swipe/wallhaven-g895pq_1920x1080.png';
+import p2 from '/src/assets/swipe/wallhaven-q2oxdd_1920x1080.png';
+import p3 from '/src/assets/swipe/wallhaven-r2k3y1_1920x1080.png';
+import p4 from '/src/assets/swipe/wallhaven-vqmdq5_1920x1080.png';
+
 /* 图片信息 */
-const images = [
-  '/src/assets/swipe/wallhaven-g895pq_1920x1080.png',
-  '/src/assets/swipe/wallhaven-q2oxdd_1920x1080.png',
-  '/src/assets/swipe/wallhaven-r2k3y1_1920x1080.png',
-  '/src/assets/swipe/wallhaven-vqmdq5_1920x1080.png'
-];
+const images = [p1, p2, p3, p4];
 const start = () => {
   router.push('/login');
 };
