@@ -13,3 +13,4 @@
 **/*.exe
 **/*.qmake.stash
 **/*.o
+**/target
