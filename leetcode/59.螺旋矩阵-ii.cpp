@@ -10,42 +10,30 @@
 
 using namespace std;
 
+/* 思路 模拟队列 */
 class Solution {
 public:
   vector<vector<int>> generateMatrix(int n) {
-    vector<vector<int>> res(n, vector<int>(n));
-    int i = 0, j = 0;
-    for (int num = 1; num <= n * n;) {
-        cout << i << " " << j << " "  << num++ << "\n";
-    //   res[i][j] = num++;
-      for (int t = 0; t < 4; t++) {
-        int &p = t % 2 ? i : j;
-        for (int k = 0; k < n - 1; k++) {
-          if (t == 3 && k == n - 2) {
-            break;
-          }
-          t < 2 ? p++ : p--;
-        //   res[i][j] = num++;
-            cout << i << " " << j << " - " << num++ << "\n";
-        }
+    vector<vector<int>> res(n, vector<int>(n, 0));
+    int num = 1;
+    for (int i = 0; i < n / 2; i++) {
+      for (int k = 0; k < n - 1 - i * 2; k++) {
+        res[i][i + k] = num++;
       }
-        cout << i << " " << ++j << " " << num++ << "\n";
-    //   res[i][++j] = num++;
+      for (int k = 0; k < n - 1 - i * 2; k++) {
+        res[i + k][n - i - 1] = num++;
+      }
+      for (int k = 0; k < n - 1 - i * 2; k++) {
+        res[n - i - 1][n - i - k - 1] = num++;
+      }
+      for (int k = 0; k < n - 1 - i * 2; k++) {
+        res[n - i - 1 - k][i] = num++;
+      }
     }
-
-    return {{}};
+    if (n % 2) {
+      res[n / 2][n / 2] = num;
+    }
+    return res;
   }
 };
-
-int main() {
-  Solution s;
-  auto ret = s.generateMatrix(4);
-  for (int i = 0; i < ret.size(); i++) {
-    for (int j = 0; j < ret[i].size(); j++) {
-      cout << ret[i][j] << " ";
-    }
-    cout << endl;
-  }
-  return 0;
-}
 // @lc code=end
