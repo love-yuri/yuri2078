@@ -1,6 +1,6 @@
 /**
   代码来源: https://www.hello-algo.com/chapter_sorting/merge_sort/#1161
-	二次修改: love-yuri
+  二次修改: love-yuri
 */
 
 #include <yuri.h>
@@ -19,10 +19,12 @@ void merge(vector<int> &nums, int left, int mid, int right) {
   int i = left, j = mid + 1, k = 0;
   // 当左右子数组都还有元素时，进行比较并将较小的元素复制到临时数组中
   while (i <= mid && j <= right) {
-    if (nums[i] <= nums[j])
+    if (nums[i] <= nums[j]) {
       tmp[k++] = nums[i++];
-    else
+    }
+    else {
       tmp[k++] = nums[j++];
+    }
   }
   // 将左子数组和右子数组的剩余元素复制到临时数组中
   while (i <= mid) {
@@ -43,7 +45,7 @@ void mergeSort(vector<int> &nums, int left, int right) {
   if (left >= right) {
     // 当子数组长度为 1 时终止递归
     return;
-	}
+  }
   // 划分阶段
   int mid = (left + right) / 2;    // 计算中点
   mergeSort(nums, left, mid);      // 递归左子数组

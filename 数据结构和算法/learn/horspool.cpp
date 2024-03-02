@@ -11,7 +11,7 @@ int horspool(std::string &s, std::string &t, int &count) {
   }
   std::vector<int> bad_char(256, m);
   for (int i = 0; i < m - 1; ++i) {
-    bad_char[static_cast<unsigned char>(t[i])] = m - i - 1;
+    bad_char[t[i]] = m - i - 1;
   }
   int skip;
   for (int i = 0; i <= n - m;) {
@@ -19,7 +19,7 @@ int horspool(std::string &s, std::string &t, int &count) {
     for (int j = m - 1; j >= 0; --j) {
       count++;
       if (s[i + j] != t[j]) {
-        skip = bad_char[static_cast<unsigned char>(s[i + j])];
+        skip = bad_char[s[i + j]];
         break;
       }
     }
