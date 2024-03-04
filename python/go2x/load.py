@@ -1,13 +1,16 @@
 import os
 import tarfile
 import mysql.connector
+import platform
 
 # clean install -DskipTests=true -f pom.xml
 # clean install -Dmaven.javadoc.skip=true -Dgpg.skip=true -Dmaven.source.skip=true -DskipTests=true -f pom.xml
+# NACOS_DISCOVERY_IP=127.0.0.1
 
 def extract_tar_gz():
     try:
         directory = os.getcwd()
+        print(directory)
         for file_name in os.listdir(directory):
             # 如果文件是以.tar.gz结尾的文件
             if file_name.endswith(".tar.gz"):
@@ -64,7 +67,7 @@ def generate_sql_code(directory, fileName):
         execSql(connection, f"DROP DATABASE IF EXISTS {base_name};")
         execSql(connection, f"create database {base_name};")
         sql_code += f'mysql -uroot -pyuri -D{base_name} < {pwdPath}/{directory}/{base_name}.sql\n'
-    with open(f'load-{fileName}.sh', 'w', encoding='utf-8') as file:
+    with open(f'load-{fileName}.{'sh' if platform.system() == 'Linux' else 'bat'}', 'w', encoding='utf-8') as file:
         file.write(sql_code)
 
 extract_tar_gz()
