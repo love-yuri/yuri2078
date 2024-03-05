@@ -14,3 +14,4 @@
 **/*.qmake.stash
 **/*.o
 **/target
+**/*.jar

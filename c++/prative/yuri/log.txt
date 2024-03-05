@@ -6,3 +6,5 @@ main.cpp main:5 -> yuri is yes
 11:50:59 main:6 -> yuri is yes
 13:19:27 main:19 -> yuri is yes
 13:19:27 fun:10 -> yuri is good
+22:58:02 main:15 -> yuri is yes
+22:58:02 fun:10 -> yuri is good
