@@ -49,4 +49,3 @@ print(f"字符串合并: {' '.join(['1', '2', '3'])}")
 string = 'sfsdfsdf'
 print(f'字符串切片: {string[:2]}')
 print(f'sfds{string}')
-
