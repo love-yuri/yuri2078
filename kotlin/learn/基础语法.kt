@@ -13,7 +13,7 @@ public fun printName(vararg args: Int) : Unit {
 }
 
 fun main() {
-    var sum = test(4,5);
-    println("4 + 5 = $sum");
-    printName(1, 2, 3);
+    // 可变var， 不可变 val， 常量 const
+    val name = "yuri";
+    print(name)
 }

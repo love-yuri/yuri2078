@@ -38,7 +38,7 @@
     "editor.fontFamily": "Fira Code Medium", // 编辑器字体
     "editor.codeLensFontFamily": "Fira Code Medium",
     "terminal.integrated.fontFamily": "JetBrainsMonoNL Nerd Font Mono", // 终端字体
-    "editor.fontSize": 30, // 编辑器文字大小
+    "editor.fontSize": 26, // 编辑器文字大小
     "terminal.integrated.fontSize": 16, // 集成终端字体大小
     "editor.semanticHighlighting.enabled": true,
     "clangd.arguments": [
@@ -108,4 +108,6 @@
     "editor.quickSuggestions": {
         "strings": "on"
     },
+    "php.validate.executablePath": "D:\\php-8.3.3-Win32-vs16-x64\\php.exe",
+    "php.executablePath": "D:\\php-8.3.3-Win32-vs16-x64\\php.exe"
 }
