@@ -10,8 +10,7 @@ fun main() {
     // val 不可变, var 可变, const 常量
     val name = "Kotlin"
 
-    val getVal = {
-        value: String -> Int
+    val getVal = { value: String -> Int
         println("yuri $value")
         1
     }

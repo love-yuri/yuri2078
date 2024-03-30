@@ -6,6 +6,7 @@ from move_base_msgs.msg import MoveBaseActionResult
 from geometry_msgs.msg import PoseWithCovarianceStamped
 n = 1
 
+# 获取初始化位置的 位置信息
 def initPost(a,b,c,d,e,f,g):
     pose_msg = PoseWithCovarianceStamped()
     pose_msg.header.frame_id = 'map'
@@ -18,6 +19,7 @@ def initPost(a,b,c,d,e,f,g):
     pose_msg.pose.pose.orientation.w = g
     return pose_msg
 
+# 获取导航点的位置信息
 def getPost(a,b,c,d,e,f,g):
     pose_msg = PoseStamped()
     pose_msg.header.frame_id = 'map'

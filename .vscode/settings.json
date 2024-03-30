@@ -38,8 +38,8 @@
     "editor.fontFamily": "Fira Code Medium", // 编辑器字体
     "editor.codeLensFontFamily": "Fira Code Medium",
     "terminal.integrated.fontFamily": "JetBrainsMonoNL Nerd Font Mono", // 终端字体
-    "editor.fontSize": 26, // 编辑器文字大小
-    "terminal.integrated.fontSize": 16, // 集成终端字体大小
+    "editor.fontSize": 32, // 编辑器文字大小
+    "terminal.integrated.fontSize": 23, // 集成终端字体大小
     "editor.semanticHighlighting.enabled": true,
     "clangd.arguments": [
         "--all-scopes-completion", // 全局补全(补全建议会给出在当前作用域不可见的索引,插入后自动补充作用域标识符),例如在main()中直接写cout,即使没有`#include <iostream>`,也会给出`std::cout`的建议,配合"--header-insertion=iwyu",还可自动插入缺失的头文件
@@ -108,6 +108,6 @@
     "editor.quickSuggestions": {
         "strings": "on"
     },
-    "php.validate.executablePath": "D:\\php-8.3.3-Win32-vs16-x64\\php.exe",
+    "php.validate.executablePath": "/usr/bin/php",
     "php.executablePath": "D:\\php-8.3.3-Win32-vs16-x64\\php.exe"
 }

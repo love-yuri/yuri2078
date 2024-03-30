@@ -5,8 +5,8 @@
  * @Description: 日志库基于c11，可写入文件
  */
 
-#ifndef YURI_LOG_H
-#define YURI_LOG_H
+#ifndef YURI_LOG_HPP
+#define YURI_LOG_HPP
 
 #include <fstream>
 #include <iostream>
@@ -62,7 +62,7 @@ public:
         logResult(ost.str(), fst);
         fst.flush();
         fst.close();
-      } catch (std::exception &e) {
+      } catch (const std::exception &e) {
         std::cout << e.what();
       }
     } else {
@@ -91,4 +91,4 @@ public:
 #define error yuri::Log(__func__, __LINE__, true)
 #endif
 
-#endif /* ifndef YURI_LOG_H */
+#endif /* ifndef YURI_LOG_HPP */

@@ -1,0 +1,6 @@
+<launch>
+    <include file="$(find dobot)/launch/DobotServer.launch"/>
+    <include file="$(find probot_vision)/launch/usb_cam_in_hand.launch"/>
+    <node name="image_correct" pkg="probot_vision" type="image_correct" output="screen" />
+    <include file="$(find apriltag_ros)/launch/continuous_detection.launch"/>
+</launch>
