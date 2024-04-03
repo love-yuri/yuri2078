@@ -9,7 +9,7 @@
 > 安装hyprlan waybar  kitty终端 swaybg设置壁纸 wofi 查看应用
 
 ```
-yay -S hyprland-git waybar-hyprland-git kitty swaybg rofi-lbonn-wayland-only-git dunst swaylock thunar polkit-gnome starship wlogout-git grim slurp pamixer cliphist wl-clipboard neofetch cava 
+yay -S hyprland-git waybar-hyprland-git kitty swaybg rofi-lbonn-wayland-only-git dunst swaylock-effects  thunar polkit-gnome starship wlogout-git grim slurp pamixer cliphist wl-clipboard neofetch cava 
 ```
 
 ### 字体安装

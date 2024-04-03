@@ -8,3 +8,5 @@ main.cpp main:5 -> yuri is yes
 13:19:27 fun:10 -> yuri is good
 22:58:02 main:15 -> yuri is yes
 22:58:02 fun:10 -> yuri is good
+22:21:34 main:15 -> yuri is yes
+22:21:34 fun:10 -> yuri is good

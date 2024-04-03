@@ -109,5 +109,4 @@
         "strings": "on"
     },
     "php.validate.executablePath": "/usr/bin/php",
-    "php.executablePath": "D:\\php-8.3.3-Win32-vs16-x64\\php.exe"
 }

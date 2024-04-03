@@ -1,5 +1,4 @@
-#include <iostream>
-#include <yuri.h>
+#include <yuri/yuri_log.hpp>
 
 void f(int a, int b, int c = 10);
 void f(int a, int b = 6, int c);
@@ -9,7 +8,7 @@ void f(int a = 4, int b, int c);
 // 原文章： https://zhuanlan.zhihu.com/p/588948013
 // https://zh.cppreference.com/w/cpp/language/default_arguments
 void f(int a, int b, int c) {
-  info << a << "-" << b << "-" << c;
+  yinfo << a << "-" << b << "-" << c;
 }
 
 // 类 默认参数
@@ -24,7 +23,7 @@ public:
 
 // 正确 g中定义了j的默认参数，但是没有i的这里可以定义i的
 void C::g(int i = 100, int) {
-  info << i;
+  yinfo << i;
 }
 
 // void C::C(int arg = 10) {} 错误因为重新定义问题，这里构造函数重复了

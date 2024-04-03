@@ -79,16 +79,14 @@ public:
   }
 };
 
-
-
 } // namespace yuri
 
-#ifndef info
-#define info yuri::Log(__func__, __LINE__)
+#ifndef yinfo
+#define yinfo ::yuri::Log(__func__, __LINE__)
 #endif
 
-#ifndef error
-#define error yuri::Log(__func__, __LINE__, true)
+#ifndef yerror
+#define yerror ::yuri::Log(__func__, __LINE__, true)
 #endif
 
 #endif /* ifndef YURI_LOG_HPP */

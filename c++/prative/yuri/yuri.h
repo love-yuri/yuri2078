@@ -20,6 +20,7 @@
 #include <mutex>
 #include <sstream>
 #include <ctime>
+#include "./yuri_log.hpp"
 // class MyIterator : public std::iterator<std::random_access_iterator_tag, T t>
 
 namespace yuri {
@@ -149,76 +150,6 @@ public:
   }
 };
 
-static std::mutex mutex;
-static bool write_in_file = false; // 是否写入文件
-
-inline static void logResult(const std::string &msg, std::ostream &cout) {
-  cout << msg;
-  std::endl(cout);
-}
-
-inline static void setWriteInFile() {
-  write_in_file = true;
-}
-
-class Log {
-private:
-  std::ostringstream ost;
-
-public:
-  Log(const std::string &func, int line) {
-    std::time_t currentTime = std::time(nullptr);
-    std::tm *localTime = std::localtime(&currentTime);
-    char formattedTime[9];
-    std::strftime(formattedTime, 9, "%H:%M:%S", localTime);
-    ost << formattedTime << " " << func << ":" << line << " -> ";
-  }
-
-  Log(const std::string &func, int line, bool) {
-    if (!write_in_file) {
-      ost << "\x1b[31m";
-    }
-    std::time_t currentTime = std::time(nullptr);
-    std::tm *localTime = std::localtime(&currentTime);
-    char formattedTime[9];
-    std::strftime(formattedTime, 9, "%H:%M:%S", localTime);
-    ost << formattedTime << " " << func << ":" << line << " -> ";
-  }
-
-  virtual ~Log() {
-    mutex.lock();
-    if (write_in_file) {
-      std::fstream fst;
-      try {
-        fst.open("log.txt", std::ios::app);
-        logResult(ost.str(), fst);
-        fst.flush();
-        fst.close();
-      } catch (std::exception &e) {
-        std::cout << e.what();
-      }
-    } else {
-      ost << "\x1b[0m";
-      logResult(ost.str(), std::cout);
-    }
-    mutex.unlock();
-  }
-
-  template <typename T>
-  Log &operator<<(T val) {
-    ost << val;
-    return *this;
-  }
-};
-
 } // namespace yuri
 
-#ifndef info
-#define info yuri::Log(__func__, __LINE__)
-#endif
-
-#ifndef error
-#define error yuri::Log(__func__, __LINE__, true)
-#endif
-
-#endif // LOG_YURI_H
+#endif // YURI_H

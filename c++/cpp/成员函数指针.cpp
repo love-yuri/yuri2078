@@ -1,10 +1,9 @@
-#include <iostream>
-#include <yuri.h>
+#include <yuri/yuri_log.hpp>
 
 class Person {
 public:
   void fun(int x) {
-    info << "x -> " << x;
+    yinfo << "x -> " << x;
   }
 };
 
