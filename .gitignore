@@ -16,3 +16,4 @@
 **/target
 **/*.jar
 **/*.log
+**/__pycache__
