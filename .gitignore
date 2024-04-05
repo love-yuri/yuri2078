@@ -17,3 +17,4 @@
 **/*.jar
 **/*.log
 **/__pycache__
+**/log.txt
