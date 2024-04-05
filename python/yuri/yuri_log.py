@@ -1,7 +1,7 @@
 '''
 Author: love-yuri yuri2078170658@gmail.com
 Date: 2024-04-05 23:03:15
-LastEditTime: 2024-04-05 23:33:55
+LastEditTime: 2024-04-05 23:38:10
 Description: python自用日志库
 '''
 import sys
