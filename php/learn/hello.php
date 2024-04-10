@@ -1,4 +1,10 @@
 <?php
+/*
+ * @Author: love-yuri yuri2078170658@gmail.com
+ * @Date: 2024-04-01 13:56:46
+ * @LastEditTime: 2024-04-08 15:14:05
+ * @Description: 
+ */
 
 $hi = 'Hello World'; // $ 定义变量
 $hello = "Hello World"; // 字符串的两种类型
@@ -10,7 +16,8 @@ $arrays = array(1, 2, 3, 4); // 数组定义
 
 
 /* 类 */
-class Person {
+class Person
+{
     public $name;
     public function __construct($name = 'tom')
     {
@@ -18,6 +25,7 @@ class Person {
         echo $this->name . "\n";
     }
 }
+
 
 // new 对象
 $person = new Person('yuri');
@@ -42,3 +50,7 @@ yuri is yes \n
 EOF;
 
 // phpinfo(); 打印php信息
+
+$a = ["ok" => "yuri"];
+echo $a['ok'] . "\n";
+
