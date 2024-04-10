@@ -4,6 +4,12 @@
 
 ## 安装
 
+> 这部分可以看[官方说明](https://apollo.baidu.com/community/Apollo-Homepage-Document?doc=BYFxAcGcC4HpYIbgPYBtXIHQCMEEsATAV0wGNkBbWA5UyRFdZWVBEAU0hFgoIH0adPgCY%2BADwCiAVnEBBCeIAcATnETFcgMxKZkgGxKAwkoDsa3YoAi45WdGSLxsYt0SzY%2BXICMa98oAMSgYALF7%2B2NhemsLBJsrCYZqKwors7AikBIp6miYmpFJSXpigFKhAA)
+>
+> 这部分可以看[官方说明](https://apollo.baidu.com/community/Apollo-Homepage-Document?doc=BYFxAcGcC4HpYIbgPYBtXIHQCMEEsATAV0wGNkBbWA5UyRFdZWVBEAU0hFgoIH0adPgCY%2BADwCiAVnEBBCeIAcATnETFcgMxKZkgGxKAwkoDsa3YoAi45WdGSLxsYt0SzY%2BXICMa98oAMSgYALF7%2B2NhemsLBJsrCYZqKwors7AikBIp6miYmpFJSXpigFKhAA)
+>
+> 这部分可以看[官方说明](https://apollo.baidu.com/community/Apollo-Homepage-Document?doc=BYFxAcGcC4HpYIbgPYBtXIHQCMEEsATAV0wGNkBbWA5UyRFdZWVBEAU0hFgoIH0adPgCY%2BADwCiAVnEBBCeIAcATnETFcgMxKZkgGxKAwkoDsa3YoAi45WdGSLxsYt0SzY%2BXICMa98oAMSgYALF7%2B2NhemsLBJsrCYZqKwors7AikBIp6miYmpFJSXpigFKhAA)
+
 1. 安装docker
 
 2. 添加软件源
@@ -22,18 +28,61 @@
    git clone https://github.com/ApolloAuto/application-core.git apollo
    cd apollo
    aem start
-   aem enter 进入
+   aem enter # 进入容器
    ```
 
 4. 编译模块
    - `buildtool build -p core` 编译core模块
-   - `buildtool install routing planning` 安装routing 和 planning 模块
+   - `buildtool install routing planning-*` 安装routing 和 planning 的所有模块
+
+## 配置场景集
+
+> 需要先进行安装。 本次使用新版界面。老的界面可以去看官方的 [Profile安装教程](https://apollo.baidu.com/community/article/1031)
+
+1. 复制个人链接
+
+   1. 打开[链接](https://apollo.baidu.com/workspace)
+   2. 点击右上角个人信息
+   3. 点击左侧服务权益
+   4. 点击仿真
+   5. 点击插件安装 -> 重置
+   6. 复制链接到apollo 容器，直接终端运行。
+
+2. 启动 `Dreamview` -> `aem bootstrap start --plus`
+
+3. 点击资源管理
+
+   ![image-20240409213711578](/home/yuri/love-yuri/learn/notes/markdown/Apollo指南.assets/image-20240409213711578.png)
+
+4. 选择场景， 没有场景集的自己去控制台下载场景集
+
+5. 然后点击右侧下载
+
+6. 选择指定部分
+
+   1. 模式选择: Pnc
+   2. 模块开启 Planning
+   3. 操作选择 Scenario_Sim
+   4. 点击当前资源里的任意一个
+   5. 
+
+   ![image-20240409213922908](/home/yuri/love-yuri/learn/notes/markdown/Apollo指南.assets/image-20240409213922908.png)
+
+7. 点击左下角开始
+
+   ![image-20240409214058865](/home/yuri/love-yuri/learn/notes/markdown/Apollo指南.assets/image-20240409214058865.png)
 
 
 
 ## clangd
 
-> 如果优雅的使用clangd 进行开发?
+> 如果优雅的使用clangd 进行开发? 如果有需要使用 vscode的clangd插件进行开发的可以用这个
+>
+> 这部分按需使用！！！！
+>
+> 这部分按需使用！！！！
+>
+> 这部分按需使用！！！！
 
 ### 重新安装python3.9
 
@@ -55,23 +104,6 @@ python3.9 --version # 验证结果
 # 设置默认python 版本
 sudo update-alternatives --install /usr/bin/python3 python /usr/local/bin/python3.9 2
 sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.9 2
-
-
-sudo mkdir -p /usr/include/modules/planning/planning_base/
-sudo cp -r /opt/apollo/neo/include/modules/planning/planning_base/proto/ /usr/include/modules/planning/planning_base/
-sudo mkdir -p /usr/include/cyber/proto
-sudo cp -r /opt/apollo/neo/include/cyber/proto /usr/include/cyber/    
-sudo mkdir -p /usr/include/modules/common/vehicle_state/
-sudo cp -r /opt/apollo/neo/include/modules/common/vehicle_state/proto /usr/include/modules/common/vehicle_state/
-sudo mkdir -p /usr/include/modules/planning/planning_interface_base/traffic_rules_base/
-sudo cp -r /opt/apollo/neo/include/modules/planning/planning_interface_base/traffic_rules_base/proto/ /usr/include/modules/planning/planning_interface_base/traffic_rules_base/
-sudo mkdir -p /usr/include/modules/planning/planning_interface_base/scenario_base/
-sudo cp -r /opt/apollo/neo/include/modules/planning/planning_interface_base/scenario_base/proto/ /usr/include/modules/planning/planning_interface_base/scenario_base/
-
-bazel run :refresh_compile_commands
-
-
-
 ```
 
 ### 安装pip
@@ -102,7 +134,7 @@ sudo cp /usr/lib/python3/dist-packages/lsb_release.py /usr/bin/
 
    `buildtool install routing cyber planning-*`
 
-2. 
+2. 先进行编译: `buildtool build -p planning`
 
 3. 打开`/apollo_workspace/WORKSPACE`， 在顶部添加
 
@@ -159,6 +191,35 @@ sudo cp /usr/lib/python3/dist-packages/lsb_release.py /usr/bin/
        # And if you're working on a header-only library, specify a test or binary target that compiles it.
    )
    
+   ```
+
+5. 在终端中运行 `bazel run :refresh_compile_commands`
+
+6. 执行如下命令，拷贝pb文件
+
+7. ```bash
+   #!/bin/bash
+   ###
+    # @Author: love-yuri yuri2078170658@gmail.com
+    # @Date: 2024-04-08 20:25:38
+    # @LastEditTime: 2024-04-09 21:59:54
+    # @Description: apollo 脚本
+   ### 
+   
+   basePath="/opt/apollo/neo/include/"
+   targetPat="/usr/include/"
+   
+   # 查找pb文件
+   result=$(sudo find "$basePath" -name "*.pb.h" | uniq)
+   
+   # 输出结果
+   for item in $result; do
+     oriPath=${item/$basePath}
+     dirPath=$(dirname $oriPath)
+     echo "sudo cp ${item} ${targetPat}${oriPath}"
+     sudo mkdir -p  "${targetPat}${dirPath}"
+     sudo cp "${item}" "${targetPat}${oriPath}"
+   done
    ```
 
    
