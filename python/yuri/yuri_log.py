@@ -1,7 +1,7 @@
 '''
 Author: love-yuri yuri2078170658@gmail.com
 Date: 2024-04-05 23:03:15
-LastEditTime: 2024-04-05 23:38:10
+LastEditTime: 2024-04-09 09:43:31
 Description: python自用日志库
 '''
 import sys
@@ -50,7 +50,7 @@ class Log:
 
 
 def info():
-  return Log( sys._getframe().f_back.f_lineno)
+  return Log(sys._getframe().f_back.f_lineno)
 
 def error():
-  return Log( sys._getframe().f_back.f_lineno, is_error=True)
+  return Log(sys._getframe().f_back.f_lineno, is_error=True)
