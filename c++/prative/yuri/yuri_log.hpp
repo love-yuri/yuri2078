@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2023-09-28 13:25:59
+ * @LastEditTime: 2024-04-23 14:56:27
  * @Description: 日志库基于c11，可写入文件
  */
 
@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iostream>
 #include <mutex>
+#include <vector>
 #include <sstream>
 #include <ctime>
 
@@ -77,7 +78,32 @@ public:
     ost << val;
     return *this;
   }
+
+  Log &operator<<(const std::vector<int> &vec) {
+    ost << "[";
+    for (size_t i = 0; i < vec.size(); i++) {
+      ost << vec[i];
+      if (i != vec.size() - 1) {
+        ost << ", ";
+      }
+    }
+    ost << "]";
+    return *this;
+  }
 };
+
+template <typename T>
+std::ostringstream& operator<<(std::ostringstream &os, const std::vector<int> &vec) {
+  os << "[";
+  for (size_t i = 0; i < vec.size(); i++) {
+    os << vec[i];
+    if (i != vec.size() - 1) {
+      os << ", ";
+    }
+  }
+  os << "]";
+  return os;
+}
 
 } // namespace yuri
 
