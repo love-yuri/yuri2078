@@ -69,6 +69,7 @@ deploy:
 ## 提交
 
 + hexo g 生成静态文件
++ hexo s 本地预览
 + hexo d 提交到GitHub 随后访问 ``` https://用户名.github.io ```就可以访问了
 
 ## 日常使用
@@ -82,7 +83,7 @@ deploy:
     - jQuery
     - 表格
     - 表单验证
-
+  
   ```
 
 + hexo new page "about" 添加关于界面
@@ -93,7 +94,15 @@ deploy:
 ## 免费cdn
 
 1. 新建github仓库
-
 2. 发布reselss版本
-
 3. `https://cdn.jsdelivr.net/gh/你的用户名/你的仓库名@发布的版本号/文件路径` 访问你的图片
+
+
+
+## Hyprland
+
+> hyprland下重新配置博客
+
+1. 克隆仓库 `git clone https://github.com/love-yuri/blog.git`
+2. 安装hexo工具 `yay -S hexo-cli` 
+3. 安装依赖 `npm install`
