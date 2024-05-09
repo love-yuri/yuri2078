@@ -1,10 +1,13 @@
+'''
+Author: love-yuri yuri2078170658@gmail.com
+Date: 2024-04-18 20:12:46
+LastEditTime: 2024-05-07 08:09:09
+Description: 海伦约会
+'''
 import numpy as np
 import os
 import re
 from yuri_util import info, get_script_dir
-from matplotlib.font_manager import FontProperties
-import matplotlib.lines as mlines
-import matplotlib.pyplot as plt
 
 basePath = get_script_dir(__file__)
 

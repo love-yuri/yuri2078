@@ -89,21 +89,13 @@
 > 因为bazel 转compile_commands.json 的脚本最低需要python 3.9 而apollo只有 3.6所以需要重新安装。亲测 3.9.7可行
 
 ```bash
-# 安装python3.9， 只在python3.9测试
-sudo apt-get remove python 
-cd ~ 
-sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
-wget -c 'https://registry.npmmirror.com/-/binary/python/3.9.7/Python-3.9.7.tgz'
-tar -xf Python-3.9.7.tgz
-cd Python-3.9.7
-./configure --enable-optimizations
-make -j 12 
-sudo make altinstall
-python3.9 --version # 验证结果
+# 安装python3.9， 只在python3.9测试。 下面一行直接复制就行了
+sudo apt-get remove python && cd ~ && mkdir yuri && cd yuri && sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget -y && wget -c 'https://registry.npmmirror.com/-/binary/python/3.9.7/Python-3.9.7.tgz' && tar -xf Python-3.9.7.tgz && cd Python-3.9.7 && ./configure --enable-optimizations && make && sudo make altinstall
+
+python3.9 --version # 验证结果， 如果正确输出再进行下一步
 
 # 设置默认python 版本
-sudo update-alternatives --install /usr/bin/python3 python /usr/local/bin/python3.9 2
-sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.9 2
+sudo update-alternatives --install /usr/bin/python3 python /usr/local/bin/python3.9 2 && sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.9 2
 ```
 
 ### 安装pip
@@ -111,15 +103,11 @@ sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/pytho
 > 重新安装python pip会出问题，需要重新安装pip
 
 ```bash
-cd ~
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-sudo python3 get-pip.py --index-url https://pypi.tuna.tsinghua.edu.cn/simple
-pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+# 重新安装pip
+cd ~/yuri && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3 get-pip.py --index-url https://pypi.tuna.tsinghua.edu.cn/simple && pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
 # 重新安装两个库，不然buildtool 会报错
-pip install requests
-pip install jinja2
-sudo cp /usr/lib/python3/dist-packages/lsb_release.py /usr/bin/
+pip install requests jinja2 && sudo cp /usr/lib/python3/dist-packages/lsb_release.py /usr/bin/
 ```
 
 ### 测试
@@ -223,3 +211,5 @@ sudo cp /usr/lib/python3/dist-packages/lsb_release.py /usr/bin/
    ```
 
    
+
+1. 

@@ -1,10 +1,11 @@
+#include <cstdio>
 #include <iostream>
 
 int gys(int x, int y) {
   if (x == 0) {
     return y;
   }
-  
+
   int res = x;
   while (x % res || y % res) {
     res--;
@@ -14,7 +15,7 @@ int gys(int x, int y) {
 
 int main() {
   int x, y;
-  std::cin >> x >> y;
+  scanf("%d,%d", &x, &y);
   std::cout << gys(x, y) << std::endl;
   return 0;
 }
