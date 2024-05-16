@@ -31,14 +31,14 @@
     "editor.guides.bracketPairs": true,
     "editor.bracketPairColorization.independentColorPoolPerBracketType": false,
     //设置禁用c/c++ 代码提示和自动补全功能
-    "C_Cpp.intelliSenseEngineFallback": "disabled",
-    "C_Cpp.intelliSenseEngine": "disabled",
-    "C_Cpp.autocomplete": "disabled",
-    "clangd.path": "/usr/bin/clangd", // clangd 地址
+    // "C_Cpp.intelliSenseEngineFallback": "disabled",
+    // "C_Cpp.intelliSenseEngine": "disabled",
+    // "C_Cpp.autocomplete": "disabled",
+    // "clangd.path": "/usr/bin/clangd", // clangd 地址
     "editor.fontFamily": "Fira Code Medium", // 编辑器字体
     "editor.codeLensFontFamily": "Fira Code Medium",
     "terminal.integrated.fontFamily": "JetBrainsMonoNL Nerd Font Mono", // 终端字体
-    "editor.fontSize": 32, // 编辑器文字大小
+    "editor.fontSize": 27, // 编辑器文字大小
     "terminal.integrated.fontSize": 23, // 集成终端字体大小
     "editor.semanticHighlighting.enabled": true,
     "clangd.arguments": [

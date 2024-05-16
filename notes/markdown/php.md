@@ -69,7 +69,6 @@
 
    1. 执行sql: `$result = $conn->query($sql);`
    2. 获取检查结果:  ` while($row = $result->fetch_assoc())` 
-   3. 获取具体的值: `$ros["age"]`
-
+   3. 获取具体的值: `$ros["age"]
+   
 7. 
-
