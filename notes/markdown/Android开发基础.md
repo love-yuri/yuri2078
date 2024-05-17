@@ -90,6 +90,20 @@
       }
       ```
 
+## ProgressBar
+
+```xml
+<ProgressBar
+    android:layout_marginTop="20dp"
+    style="?android:attr/progressBarStyleHorizontal"
+    android:progress="40"
+    android:max="100"
+    android:layout_weight="3.0"
+    android:layout_width="match_parent"
+    android:layout_height="18dp"/>
+```
+
+
 
 ## SQLitle
 
@@ -104,16 +118,33 @@
 2. `dependencies`下添加
 
    ```ceylon
-   implementation(libs.androidx.room.runtime)
-   annotationProcessor(libs.androidx.room.compiler)
-   //noinspection KaptUsageInsteadOfKsp
-   kapt(libs.androidx.room.compiler)
-   implementation(libs.androidx.room.ktx)
-   implementation(libs.androidx.room.rxjava2)
-   implementation(libs.androidx.room.rxjava3)
-   implementation(libs.androidx.room.guava)
-   testImplementation(libs.androidx.room.testing)
-   implementation(libs.androidx.room.paging)
+   val room_version = "2.6.1"
+   
+   implementation("androidx.room:room-runtime:$room_version")
+   annotationProcessor("androidx.room:room-compiler:$room_version")
+   
+   // To use Kotlin annotation processing tool (kapt)
+   kapt("androidx.room:room-compiler:$room_version")
+   // To use Kotlin Symbol Processing (KSP)
+   ksp("androidx.room:room-compiler:$room_version")
+   
+   // optional - Kotlin Extensions and Coroutines support for Room
+   implementation("androidx.room:room-ktx:$room_version")
+   
+   // optional - RxJava2 support for Room
+   implementation("androidx.room:room-rxjava2:$room_version")
+   
+   // optional - RxJava3 support for Room
+   implementation("androidx.room:room-rxjava3:$room_version")
+   
+   // optional - Guava support for Room, including Optional and ListenableFuture
+   implementation("androidx.room:room-guava:$room_version")
+   
+   // optional - Test helpers
+   testImplementation("androidx.room:room-testing:$room_version")
+   
+   // optional - Paging 3 Integration
+   implementation("androidx.room:room-paging:$room_version")
    ```
 
 ### 编写实体类
@@ -185,9 +216,36 @@ val userDao = db.userDao()
 1. `putExtra("name", name)` 添加扩展参数
 2. `intent.getBooleanExtra("isUpdate", false)` 获取扩展参数
 
+## 布局常用属性
+
+
+
 # Kotlin开发基础
 
 ## 常用函数
 
 1. `Random.nextInt(int: Int)` 随机生成一个值, 如果传入参数则是 0 - n
-2. 
+
+## 多线程基础
+
+1. 获取协程`private val mainScope = CoroutineScope(Dispatchers.Main)`
+
+2. 执行任务
+
+   ```kotlin
+   mainScope.launch {
+       while (count < progressBar.max) {
+           delay(1000)
+           count++
+           withContext(Dispatchers.Main) {
+               textView?.apply {
+                   text = "$count%"
+                   translationX = (count / 100.0f * width) - 80
+               }
+               progressBar?.setProgress(count)
+           }
+       }
+   }
+   ```
+
+3. `withContext` 切换回主线程执行任务
