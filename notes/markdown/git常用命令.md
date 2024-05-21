@@ -22,6 +22,7 @@
 + ``` git log ``` 查看历史提交日志
 + ``` git reset --hard commit_id ``` 回退到某个版本
 + ``` git push main ``` 推送到远程 main 分支
++ `git update-index --assume-unchanged <file>` git不再追踪该文件的更改   
 
 ## 远程覆盖本地
 
