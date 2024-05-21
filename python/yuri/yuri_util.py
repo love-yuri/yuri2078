@@ -1,7 +1,7 @@
 '''
 Author: love-yuri yuri2078170658@gmail.com
 Date: 2024-04-05 23:03:15
-LastEditTime: 2024-04-18 20:21:24
+LastEditTime: 2024-05-21 19:59:35
 Description: python工具
 '''
 import os
@@ -56,5 +56,14 @@ def info():
 def error():
   return Log(sys._getframe().f_back.f_lineno, is_error=True)
 
-def get_script_dir(file) -> str:
-  return os.path.dirname(os.path.realpath(file))
+class Utils:
+  @staticmethod
+  def get_script_dir(file) -> str:
+    return os.path.dirname(os.path.realpath(file))
+  
+  @staticmethod
+  def action(fun: callable, *args):
+    start = time.perf_counter_ns()
+    fun(*args)
+    end = time.perf_counter_ns()
+    info() << f"{fun.__name__} 执行耗时 {round((end - start) / 1000000, 2)} ms"
