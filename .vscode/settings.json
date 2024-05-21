@@ -17,7 +17,7 @@
     }, // 右键run code时运行的命令；未注释的仅适用于PowerShell（Win10默认），文件名中有空格也可以编译运行；注释掉的适用于cmd（win7默认），PS和bash也能用，但文件名中有空格时无法运行
     "code-runner.saveFileBeforeRun": true, // run code前保存
     "code-runner.preserveFocus": true, // 若为false，run code后光标会聚焦到终端上。如果需要频繁输入数据可设为false
-    "code-runner.clearPreviousOutput": true, // 每次run code前清空属于code runner的终端消息，默认false
+    "code-runner.clearPreviousOutput": false, // 每次run code前清空属于code runner的终端消息，默认false
     "code-runner.ignoreSelection": true, // 默认为false，效果是鼠标选中一块代码后可以单独执行，但C是编译型语言，不适合这样用
     "C_Cpp.errorSquiggles": "enabled",
     //设置光标丝滑显示
@@ -37,7 +37,8 @@
     // "clangd.path": "/usr/bin/clangd", // clangd 地址
     "editor.fontFamily": "Fira Code Medium", // 编辑器字体
     "editor.codeLensFontFamily": "Fira Code Medium",
-    "terminal.integrated.fontFamily": "JetBrainsMonoNL Nerd Font Mono", // 终端字体
+    "terminal.integrated.fontFamily": "Consolas", // 终端字体
+    // "terminal.integrated.fontFamily": "JetBrainsMonoNL Nerd Font Mono", // 终端字体
     "editor.fontSize": 27, // 编辑器文字大小
     "terminal.integrated.fontSize": 23, // 集成终端字体大小
     "editor.semanticHighlighting.enabled": true,
