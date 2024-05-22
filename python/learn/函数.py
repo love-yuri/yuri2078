@@ -1,6 +1,3 @@
-import imp
-
-
 def max(x,y = 9): #默认参数
     return x if x > y else y #返回值
 # def max(x,/,y ): #  /的左边不允许使用关键字参数
