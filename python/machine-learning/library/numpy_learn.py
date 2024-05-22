@@ -1,7 +1,7 @@
 '''
 Author: love-yuri yuri2078170658@gmail.com
 Date: 2024-04-05 22:35:57
-LastEditTime: 2024-05-21 23:14:04
+LastEditTime: 2024-05-22 18:52:51
 Description: numpy库学习
 '''
 
@@ -46,3 +46,5 @@ info() << "np.shape[0]: 行 -> " << testArray.shape[0] << " np.shape[1]: 列 -> 
 info() << "np.sum(): 对所有数据求和 " << testArray.sum()
 info() << "np.sum(0): 对每列数据求和, 返回每列和的集合 " << testArray.sum(0)
 info() << "np.sum(1): 对每行数据求和, 返回每行和的集合 " << testArray.sum(1) 
+info() << "随机生成5个 1 - 20的数据 " << np.random.randint(1, 20, 5)
+info() << "将 [1, 2, 3] 和 [4, 5, 6] 一一对应组成坐标 " << np.column_stack(([1, 2, 3], [4, 5, 6]))
