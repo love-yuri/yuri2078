@@ -1,7 +1,7 @@
 '''
 Author: love-yuri yuri2078170658@gmail.com
 Date: 2024-04-05 23:03:15
-LastEditTime: 2024-05-21 19:59:35
+LastEditTime: 2024-05-22 19:43:55
 Description: python工具
 '''
 import os
@@ -57,13 +57,28 @@ def error():
   return Log(sys._getframe().f_back.f_lineno, is_error=True)
 
 class Utils:
+  '''
+  description: 
+  param {*} file 文件名
+  return {*} 返回脚本目录
+  '''  
   @staticmethod
   def get_script_dir(file) -> str:
     return os.path.dirname(os.path.realpath(file))
   
+  '''
+  description: 
+  param {callable} fun 待测试的函数
+  param {array} args 函数所需的参数
+  return {*} 返回执行所耗ms
+  '''  
   @staticmethod
-  def action(fun: callable, *args):
+  def action(fun: callable, *args, **kwargs) -> float:
+    debug = kwargs.get("debug", True)  # 默认开启调试模式，可以通过debug=False来关闭调试模式。
     start = time.perf_counter_ns()
     fun(*args)
     end = time.perf_counter_ns()
-    info() << f"{fun.__name__} 执行耗时 {round((end - start) / 1000000, 2)} ms"
+    used = round((end - start) / 1000000, 2)
+    if debug:
+      info() << f"{fun.__name__} 执行耗时 {used} ms"
+    return used
