@@ -205,6 +205,54 @@ val userDao = db.userDao()
 // 然后就可以使用dao的方法来操作数据库了
 ```
 
+## 网络请求
+
+1. 导入依赖
+
+   ```kotlin
+   implementation ("com.squareup.retrofit2:retrofit:(2.11.0)")
+   implementation ("com.squareup.retrofit2:converter-gson:2.3.0")
+   implementation ("com.squareup.okhttp3:logging-interceptor:3.8.1")
+   ```
+
+2. 定义接口
+
+   ```kotlin
+   interface RetrofitService {
+       @GET("yuri")
+       fun hello(): Call<Student>
+   }
+   ```
+
+3. 创建retrofit
+
+   ```kotlin
+   val retrofit = Retrofit.Builder()
+       .baseUrl("http://192.168.184.16:8000/")
+       .addConverterFactory(GsonConverterFactory.create())
+       .build()
+   ```
+
+4. 创建service
+
+   ```kotlin
+   val service = retrofit.create(RetrofitService::class.java)
+   service.hello().enqueue(object :retrofit2.Callback<Student> {
+       // 接收到信息
+       override fun onResponse(call: Call<Student>, response: Response<Student>) {
+           val body = response.body()
+           Log.i("yuri", "body -> $body")
+       }
+   
+       // 调用失败
+       override fun onFailure(call: Call<Student>, t: Throwable) {
+           TODO("调用失败: ${t.message}")
+       }
+   })
+   ```
+
+5. 
+
 ## AppCompatActivity
 
 1. `setContentView(R.layout.activity_main)` 设置显示的主界面
