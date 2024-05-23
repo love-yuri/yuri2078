@@ -1,9 +1,13 @@
+'''
+Author: love-yuri yuri2078170658@gmail.com
+Date: 2024-05-22 20:10:56
+LastEditTime: 2024-05-23 11:35:45
+Description: knn手写数字识别
+'''
 import numpy as np
 import pathlib
 from yuri_util import *
 from sklearn.neighbors import KNeighborsClassifier
-
-
 
 def GetData(dirName: str):
   labels = []
