@@ -1,7 +1,7 @@
 '''
 Author: love-yuri yuri2078170658@gmail.com
 Date: 2024-04-05 22:35:57
-LastEditTime: 2024-05-22 18:52:51
+LastEditTime: 2024-05-24 13:29:38
 Description: numpy库学习
 '''
 
@@ -48,3 +48,6 @@ info() << "np.sum(0): 对每列数据求和, 返回每列和的集合 " << testA
 info() << "np.sum(1): 对每行数据求和, 返回每行和的集合 " << testArray.sum(1) 
 info() << "随机生成5个 1 - 20的数据 " << np.random.randint(1, 20, 5)
 info() << "将 [1, 2, 3] 和 [4, 5, 6] 一一对应组成坐标 " << np.column_stack(([1, 2, 3], [4, 5, 6]))
+info() << "使用np.array([1, 2, 3, 4, 5, 6]).reshap2(2,3)重组数据 " << np.array([1, 2, 3, 4, 5, 6]).reshape(3, 2)
+info() << "np.mean([[1, 2, 3], [4, 2, 3]]) 取平均值:默认取所有值 " << np.mean([[1, 2, 3], [4, 2, 3]])
+info() << "np.mean([[1, 2, 3], [4, 2, 3]], axis=1) 取平均值: axis=1 取行， 0 取列，返回矩阵 " << np.mean([[1, 2, 3], [4, 2, 3]], axis=1)
