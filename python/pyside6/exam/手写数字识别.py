@@ -1,14 +1,14 @@
 '''
 Author: love-yuri yuri2078170658@gmail.com
 Date: 2024-05-16 11:01:01
-LastEditTime: 2024-05-24 19:01:34
+LastEditTime: 2024-05-28 23:12:51
 Description: 手写数字识别代码
 '''
 import sys
 import time
 import threading
 from PySide6.QtWidgets import QWidget, QApplication, QPushButton, QLabel, QMessageBox, QMenu, QMenuBar
-from PySide6.QtCore import Slot, Qt
+from PySide6.QtCore import Slot, Qt, QThread
 from PySide6.QtGui import QImage, QPainter, QPen, qRgb
 from sklearn.neighbors import KNeighborsClassifier
 import pathlib
@@ -58,10 +58,48 @@ class DrawWindow(QWidget):
     self.update()
 
 class MainWindow(QWidget):
+
+  class Worker(QThread):
+    def __init__(self, window):
+      super().__init__()
+      self.window = window
+      self.isRunning = False
+  
+    def run(self):
+      self.isRunning = True
+      self.window.log('开始读取训练数据...')
+      datas, labels = self.window.GetData(self.window.learnDataPath)
+      if datas is None or labels is None:
+        self.window.log('测试失败')
+        return
+
+      # 开始knn
+      k = 5
+      self.knn = KNeighborsClassifier(k)
+      self.knn.fit(datas, labels)
+
+      self.window.log('开始读取测试数据...')
+      datas_t, labels_t = self.window.GetData(self.window.testDataPath)
+      if datas is None or labels is None:
+        self.window.log('测试失败')
+        return
+      # 测试
+      errorCount: float = 0.0
+      allCount: float = len(datas_t)
+      count = 0
+      self.window.log('开始对训练结果进行测试...\n')
+      for i in range(len(datas_t)):
+        res = self.knn.predict([datas_t[i]])
+        count += 1
+        self.window.log(f'测试结果: {res[0]} 实际结果: {labels_t[i]}, {count} / {allCount}', last=True)
+        if res[0] != labels_t[i]:
+          errorCount += 1.0
+      self.window.log(f'测试完毕, 错误率: {round(errorCount / allCount * 100, 2)}%, 当前k为 -> {k}')
+      self.isRunning = False
+        
+
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
-
-    
 
     ## 常用数据配置
     basePath = os.path.dirname(os.path.realpath(__file__))
@@ -108,7 +146,7 @@ class MainWindow(QWidget):
 
     # 初始化KNN分类器
     self.log('欢迎使用手写数字识别系统')
-    self.thread = threading.Thread(target=self.TestData)
+    self.thread = MainWindow.Worker(self)
     self.thread.start()
 
     # 设置样式
@@ -127,7 +165,7 @@ class MainWindow(QWidget):
 
   @Slot()
   def identify(self):
-    if self.isRunning:
+    if self.thread.isRunning:
       QMessageBox.warning(self, '错误', '正在训练数据中，请等待')
       return
     
@@ -168,7 +206,7 @@ class MainWindow(QWidget):
     matrix = np.array(matrix).T
     self.log('转换成功, 等待结果返回...')
 
-    res = self.knn.predict(matrix.reshape(1, 1024))
+    res = self.thread.knn.predict(matrix.reshape(1, 1024))
     QMessageBox.information(self, '成功!', f'识别结果为: {res[0]}')
     # for i in range(32):
     #   info() << matrix[i]
@@ -207,38 +245,12 @@ class MainWindow(QWidget):
     except Exception as e:
       self.log(f'读取数据失败: {e}')
       return None, None
-
-  def TestData(self):
-    self.isRunning = True
-    self.log('开始读取训练数据...')
-    datas, labels = self.GetData(self.learnDataPath)
-    if datas is None or labels is None:
-      self.log('测试失败')
-      return
-
-    # 开始knn
-    k = 5
-    self.knn = KNeighborsClassifier(k)
-    self.knn.fit(datas, labels)
-
-    self.log('开始读取测试数据...')
-    datas_t, labels_t = self.GetData(self.testDataPath)
-    if datas is None or labels is None:
-      self.log('测试失败')
-      return
-    # 测试
-    errorCount: float = 0.0
-    allCount: float = len(datas_t)
-    count = 0
-    self.log('开始对训练结果进行测试...\n')
-    for i in range(len(datas_t)):
-      res = self.knn.predict([datas_t[i]])
-      count += 1
-      self.log(f'测试结果: {res[0]} 实际结果: {labels_t[i]}, {count} / {allCount}', last=True)
-      if res[0] != labels_t[i]:
-        errorCount += 1.0
-    self.log(f'测试完毕, 错误率: {round(errorCount / allCount * 100, 2)}%, 当前k为 -> {k}')
-    self.isRunning = False
+  
+  def closeEvent(self, event):
+    self.thread: QThread
+    self.thread.deleteLater()
+    event.accept()
+    
 
 if __name__ == "__main__":
   app = QApplication(sys.argv)
