@@ -8,6 +8,7 @@ import os
 import sys
 import time
 import threading
+import json
 from builtins import open
 
 
@@ -82,3 +83,13 @@ class Utils:
     if debug:
       info() << f"{fun.__name__} 执行耗时 {used} ms"
     return used
+
+  @staticmethod
+  def LoadConfig(fileName: str, ConfigClass):
+    with open(fileName, 'r', encoding='utf-8') as file:
+      return ConfigClass(**json.loads(file.read()))
+  
+  @staticmethod
+  def SetConfig(fileName: str, ConfigClass):
+    with open(fileName, 'w', encoding='utf-8') as file:
+      file.write(json.dumps(ConfigClass.__dict__, indent=2))
