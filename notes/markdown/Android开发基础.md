@@ -105,6 +105,40 @@
 
 
 
+## SeekBar
+
+### setOnSeekBarChangeListener
+
+> 设置滑动进度条时的方法
+
+```kotlin
+setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+    override fun onProgressChanged(
+        seekBar: SeekBar?,
+        progress: Int,
+        fromUser: Boolean
+    ) {
+         // TODO("数值变化时触发")
+    }
+
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+         // TODO("开始滑动时触发")
+    }
+
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+        // TODO("停止滑动时触发")
+    }
+})
+```
+
+## VideoView
+
+> 用来播放视频，常用方法和mediaPlayer差不多
+
+1. `videoView.setVideoPath(video.path)` 设置播放路径
+2. `videoView.start() 开始播放`
+3. `videoView.pause()` 暂停播放
+
 ## SQLitle
 
 > 使用room database连接数据库
@@ -264,6 +298,20 @@ val userDao = db.userDao()
 1. `putExtra("name", name)` 添加扩展参数
 2. `intent.getBooleanExtra("isUpdate", false)` 获取扩展参数
 
+## MediaPlayer
+
+> 该类是用来播放媒体的
+
+### 播放音乐
+
+1. `mediaPlayer.reset()` 重置资源
+2. `mediaPlayer.prepare()` 准备音乐直至可以播放
+3. `mediaPlayer.prepareAsync()` 异步整理音乐 
+4. `mediaPlayer.start()` 开始播放音乐
+5.  `mediaPlayer.pause()` 暂停音乐
+6. `mediaPlayer.setDataSource(path)` 设置播放的媒体
+7. `mediaPlayer.release()` 释放播放zi'yuan
+
 ## 布局常用属性
 
 
@@ -276,24 +324,22 @@ val userDao = db.userDao()
 
 ## 多线程基础
 
-1. 获取协程`private val mainScope = CoroutineScope(Dispatchers.Main)`
+### 协程
 
-2. 执行任务
+```kotlin
+// 定义之后的协程直接执行
+job = lifecycleScope.launch {
+    val seekBar: SeekBar = this@MusicActivity.findViewById(R.id.seekBar)
+    while (::mediaPlayer.isInitialized && mediaPlayer.isPlaying) {
+        // 在需要更新界面时，切换到主线程
+        withContext(Dispatchers.Main) {
+            val position = mediaPlayer.currentPosition.toFloat()
+            seekBar.progress = (position / mediaPlayer.duration.toFloat() * 100).toInt()
+        }
+        delay(1000)
+    }
+}
+```
 
-   ```kotlin
-   mainScope.launch {
-       while (count < progressBar.max) {
-           delay(1000)
-           count++
-           withContext(Dispatchers.Main) {
-               textView?.apply {
-                   text = "$count%"
-                   translationX = (count / 100.0f * width) - 80
-               }
-               progressBar?.setProgress(count)
-           }
-       }
-   }
-   ```
-
-3. `withContext` 切换回主线程执行任务
+1. 协程是直接执行的，如果不想直接执行，需要使用`launch(start = CoroutineStart.LAZY) ` 指定。然后使用job.start开始执行
+2. 使用`job.cancel()` 取消协程
