@@ -35,8 +35,10 @@
     // "C_Cpp.intelliSenseEngine": "disabled",
     // "C_Cpp.autocomplete": "disabled",
     // "clangd.path": "/usr/bin/clangd", // clangd 地址
-    "editor.fontFamily": "Fira Code Medium", // 编辑器字体
-    "editor.codeLensFontFamily": "Fira Code Medium",
+    // "editor.fontFamily": "Fira Code Medium", // 编辑器字体
+    // "editor.codeLensFontFamily": "Fira Code Medium",
+    "editor.fontFamily": "Consolas", // 编辑器字体 windows
+    "editor.codeLensFontFamily": "Consolas",
     "terminal.integrated.fontFamily": "Consolas", // 终端字体
     // "terminal.integrated.fontFamily": "JetBrainsMonoNL Nerd Font Mono", // 终端字体
     "editor.fontSize": 30, // 编辑器文字大小
