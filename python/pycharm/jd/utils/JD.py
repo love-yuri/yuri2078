@@ -68,7 +68,10 @@ class JD(QThread):
   
   def run(self):
     while self.isAlive:
-      self.comment.extend(self.getcomment())
+      comments = self.getcomment()
+      if comments is None or len(comments) == 0:
+        break
+      self.comment.extend(comments)
       self.config.page += 1
       self.update.emit(len(self.comment))
       time.sleep(1)
@@ -80,21 +83,24 @@ class JD(QThread):
   def getcomment(self):
     # 发送请求获取评论数据
     try:
-      comments: [Comment] = []
+      comments: list = []
       self.params['page'] = self.config.page
       self.params['productId'] = self.config.productId
       self.params['pageSize'] = self.config.pageSize
       response = requests.get(self.baseUrl, params=self.params, headers=self.headers)
       if response.status_code == 200:
-        info() << "请求发送成功!, 正在读取评论"
+        if response.text is None or response.text == "":
+          return []
         for comment in response.json()['comments']:
           comments.append(Comment(**comment))
       else:
         error() << "请求发送失败 -> " << response.status_code
+        return []
       info() << f"一共读取到了{len(comments)}条评论"
       return comments
     except requests.exceptions.RequestException as e:
       error() << "请求发送异常 -> " << e
+      return []
   
   def TimelineChart(self):
     times = []
