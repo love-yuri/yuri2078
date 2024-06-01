@@ -9,7 +9,6 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
 import utils.JD
 import numpy as np
-import widgets.dialog
 import widgets.MainWindowUi
 from utils.yuri_util import info, Utils
 
