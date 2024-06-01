@@ -1,13 +1,36 @@
+'''
+Author: love-yuri yuri2078170658@gmail.com
+Date: 2024-05-26 13:24:43
+LastEditTime: 2024-05-30 09:27:02
+Description: 京东评论获取
+'''
 import requests
-import json
 from yuri_util import *
 
-class Person:
-  def __init__(self, name, age, **kwargs) -> None:
-    self.name = name
-    self.age = age
+baseUrl = 'https://api.m.jd.com/'
 
-s = '{ "name": "张三", "age": 30, "city": "北京" }'
-info() << json.loads(s)
-person = Person(**json.loads(s))
-info() << person.name
+params = {
+  'appid': 'item-v3',
+  'functionId': 'pc_club_productPageComments',
+  "productId":100107613740,
+  "score":0,
+  "sortType":5,
+  "page":0,
+  "pageSize":10,
+}
+
+headers = {
+  'Cookie': 'unpl=JF8EAJ5nNSttCBgBBUwKGRJAHl4BWwpdHERXZmRVUAoLSlANSQQaQBZ7XlVdWBRKEx9sYBRUX1NJVA4eCysSEHtdVV9eDkIQAmthNWRVUCVXSBtsGHwQBhAZbl4IexcCX2cDVFpeSlQBGgocGxhMXlFYWAtIFApfZjVUW2h7ZAQrAysTIAAzVRNdDksQBW5nAVVVX0JcAhgHHRcTSF5dblw4SA; __jdv=76161171|direct|-|none|-|1716701510349; __jdu=1716701509689624742228; areaId=12; shshshfpa=0fbfd44f-cd8e-e4f4-5590-972efb0f6563-1716701512; shshshfpx=0fbfd44f-cd8e-e4f4-5590-972efb0f6563-1716701512; 3AB9D23F7A4B3CSS=jdd03RE3PS5F6QUA6ROBNLBQAXU2I6BRF5G7YL3R2EP3CW2H6F6AJJJZZXLF3OXOC3NZYG5LJFKQX35NCJ4E5MFEAHGYWBAAAAAMPWNV6TEQAAAAAC5QSCSLQSAVRHAX; _gia_d=1; TrackID=1DS74aEwojsDZDs7qeBXylVSRft4QQyJPoMumWmrckYWnYGU3BYlFRt-7JYFOJZeKY8KqSVuVrJZLbCs8FdmcAYrOgCoyqxvxUOux9YK_y18; thor=25CBE492AC2D37C47722F98CCDCCD87E42172A720CA66B182EA1EA005DA8E5F7E143A04CB26B490452B87A4595018D80F783E0DA562D8590783B951F2BAA6D2AF9C2313FE0B8930411E92B3E8182B207C42E1AE6395EEE00875FC7809EE8A45ED3A1B308D16FC4DBF9741028973C7EAC0BFCD892170E36B957C305EC877A780DAF94035486D323C13306F8B319673028; pinId=45Wtd6d6lNaxuL8Wc0tgzw; pin=wdFpxtjMnQHTBj; unick=%E8%B7%AF%E8%BF%87%E7%9A%84%E6%99%93%E7%BE%8E%E7%84%B0; ceshi3.com=103; _tp=rEisCL2gKHaJ%2FjgWRSKvvw%3D%3D; _pst=wdFpxtjMnQHTBj; jsavif=1; 3AB9D23F7A4B3C9B=RE3PS5F6QUA6ROBNLBQAXU2I6BRF5G7YL3R2EP3CW2H6F6AJJJZZXLF3OXOC3NZYG5LJFKQX35NCJ4E5MFEAHGYWBA; token=f17b5cc295dbbd568e21f32397856b0e,3,953723; __tk=mDVvZnK0lAmlpLThonzLjCZfZBTlmmVPmczTZKTmnMTkjmZgmKmKZbVflBVnYmKUmKmkZmrT,3,953723; __jda=181111935.1716701509689624742228.1716701509.1716701509.1716701510.1; __jdb=181111935.12.1716701509689624742228|1.1716701510; __jdc=181111935; flash=2_n_5OWKvXD61_YgAmWp7M03_mhqzCG6BWLpshy7phFUFLfZO_gx2axtE2FTZjJI53WgkCrLemKkVWlaYPazhoQu3zTAYa1m-5xCqR6ovnFh91tG3zNz4op__BT_3RPBEq8N6P3Pqhkas3rLtiXnJoRqdbnkxV4j1zznD_xCnP07q*; ipLoc-djd=12-988-993-58088; shshshfpb=BApXc5mBksOpASXpfP8kKQOdZ_llAydS5BlQxEj1o9xJ1MvHyT4C2',
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+}
+
+# 发送请求获取评论数据
+try:
+  response = requests.get(baseUrl, params=params, headers=headers)
+  if response.status_code == 200:
+    info() << "请求发送成功!"
+    info() << response.json()
+  else:
+    error() << "请求发送失败 -> " << response.status_code
+except requests.exceptions.RequestException as e:
+  error() << "请求发送异常 -> " << e
