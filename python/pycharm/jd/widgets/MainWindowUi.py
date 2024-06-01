@@ -57,7 +57,6 @@ class Ui_Form(object):
 "\n"
 "QPushButton:hover {\n"
 "    background-color: #9c1a64;\n"
-"    cursor: pointer;\n"
 "}")
         self.verticalLayout_2 = QVBoxLayout(self.widget)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
