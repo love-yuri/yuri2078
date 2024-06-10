@@ -241,7 +241,19 @@ val userDao = db.userDao()
 
 ## 网络请求
 
-1. 导入依赖
+1. 申请网络权限
+
+   ```xml
+   <uses-permission android:name="android.permission.INTERNET"/>
+   ```
+
+2. 取消http限制
+
+   ```xml
+   android:usesCleartextTraffic="true"
+   ```
+
+3. 导入依赖
 
    ```kotlin
    implementation ("com.squareup.retrofit2:retrofit:(2.11.0)")
@@ -249,7 +261,7 @@ val userDao = db.userDao()
    implementation ("com.squareup.okhttp3:logging-interceptor:3.8.1")
    ```
 
-2. 定义接口
+4. 定义接口
 
    ```kotlin
    interface RetrofitService {
@@ -258,7 +270,7 @@ val userDao = db.userDao()
    }
    ```
 
-3. 创建retrofit
+5. 创建retrofit
 
    ```kotlin
    val retrofit = Retrofit.Builder()
@@ -267,7 +279,7 @@ val userDao = db.userDao()
        .build()
    ```
 
-4. 创建service
+6. 创建service
 
    ```kotlin
    val service = retrofit.create(RetrofitService::class.java)
@@ -285,7 +297,43 @@ val userDao = db.userDao()
    })
    ```
 
-5. 
+7. 完整xml文件
+
+   ```xml
+   <?xml version="1.0" encoding="utf-8"?>
+   <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:tools="http://schemas.android.com/tools">
+   
+       <uses-permission android:name="android.permission.INTERNET"/>
+   
+   
+       <application
+           android:allowBackup="true"
+           android:dataExtractionRules="@xml/data_extraction_rules"
+           android:fullBackupContent="@xml/backup_rules"
+           android:icon="@mipmap/ic_launcher"
+           android:label="@string/app_name"
+           android:roundIcon="@mipmap/ic_launcher_round"
+           android:supportsRtl="true"
+           android:theme="@style/Theme.Exp11"
+           android:usesCleartextTraffic="true"
+           tools:targetApi="31">
+           <activity
+               android:name=".MainActivity"
+               android:exported="true">
+               <intent-filter>
+                   <action android:name="android.intent.action.MAIN" />
+   
+                   <category android:name="android.intent.category.LAUNCHER" />
+               </intent-filter>
+           </activity>
+           <activity android:name=".WeatherActivity" />
+       </application>
+   
+   </manifest>
+   ```
+
+   
 
 ## AppCompatActivity
 
@@ -314,7 +362,42 @@ val userDao = db.userDao()
 
 ## 布局常用属性
 
+### LinearLayout
 
+## 添加菜单
+
+1. 在res文件夹新建menu文件夹
+
+2. 新建一个main.xml 
+
+3. 添加 <item title="" /> 标签
+
+4. 重写`onCreateOptionsMenu`函数
+
+   ```kotlin
+   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+       menuInflater.inflate(R.menu.main, menu)
+       return super.onCreateOptionsMenu(menu)
+   }
+   ```
+
+5. 设置活动bar： `setSupportActionBar(findViewById(R.id.toolbar))`
+
+6. 重写选择事件：`onOptionsItemSelected`
+
+## Glide
+
+> 安卓图片加载库
+
+1. 导入 依赖
+
+   ```kotlin
+   implementation ("com.github.bumptech.glide:glide:4.11.0")
+   annotationProcessor ("com.github.bumptech.glide:compiler:4.11.0")
+   implementation ("com.makeramen:roundedimageview:2.3.0")
+   ```
+
+2. 复制图片
 
 # Kotlin开发基础
 
