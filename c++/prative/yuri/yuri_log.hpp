@@ -10,6 +10,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <mutex>
 #include <vector>
 #include <sstream>
@@ -79,15 +80,25 @@ public:
     return *this;
   }
 
-  Log &operator<<(const std::vector<int> &vec) {
-    ost << "[";
+  template<typename T>
+  Log &operator<<(const std::vector<T> &vec) {
+    *this << "[";
     for (size_t i = 0; i < vec.size(); i++) {
-      ost << vec[i];
+      *this << vec[i];
       if (i != vec.size() - 1) {
-        ost << ", ";
+        *this << ", ";
       }
     }
-    ost << "]";
+    *this << "]\n";
+    return *this;
+  }
+
+  template <typename KeyVal, typename ValVal>
+  Log &operator<<(const std::map<std::vector<KeyVal>, ValVal> &map) {
+    *this << "type: Map\n";
+    for (auto m : map) {
+      *this << m.first << " -> " << m.second << "\n";
+    }
     return *this;
   }
 };
