@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2024-06-11 22:00:25
- * @LastEditTime: 2024-06-12 11:09:03
+ * @LastEditTime: 2024-06-12 11:42:04
  * @Description: 八数码问题-A*算法
  */
 
@@ -15,13 +15,12 @@
 using std::vector;
 
 // 地图上的点-这里是八数码转int的值
-// 列入 123 456 780 转成 12345678
+// 列如 123 456 780 转成 12345678
 struct Point {
-  using _T = std::shared_ptr<Point>;
-  _T parent; // 父节点
+  std::shared_ptr<Point> parent; // 父节点
   int val;   // 八位数码的值
   int h;     // 启发式函数值
-  int g;     // 实际距离
+  int g;     // 移动代价
 
   // 3 * 3 地图中的xy坐标
   int x;
@@ -42,7 +41,7 @@ struct Point {
     return this->val == p.val;
   }
 
-  // 获取股价函数的值
+  // 获取估价函数的值
   int F() const {
     return h + g;
   }
@@ -53,6 +52,7 @@ struct Point {
   }
 };
 
+// 重载<< 方便观察输出
 std::ostream &operator<<(std::ostream &cout, const Point &p) {
   int val = p.val;
   vector<int> martix(9);
@@ -113,6 +113,7 @@ public:
     std::cout << p << "\n";
   }
 
+  // 将点的信息转为地图信息
   void setMap(const Point &p) {
     int val = p.val;
     for (int i = 2; i >= 0; i--) {
@@ -125,19 +126,22 @@ public:
 
   // 判断是否能添加到queue
   void addToQueue(Point &p, unsigned x, unsigned y) {
+    // 先判断该点是否可达
     if (x < 0 || x >= map.size() || y < 0 || y >= map[0].size()) {
       return;
     }
-
+    // 先交换两个点
     std::swap(map[p.x][p.y], map[x][y]);
     Point next(MapToPoint(map));
+    // 如果他没有在close表中，则添加到open表中
     if (!close.contains(next.val)) {
-      next.parent = std::make_shared<Point>(Point(p));
-      next.g = p.g + 1;
+      next.parent = std::make_shared<Point>(Point(p)); // 添加父路径
+      next.g = p.g + 1; // 默认g值是原点 + 1，因为一次只能移动1格
       next.h = getH(next);
-      open.push(next);
-      close.insert(next.val);
+      open.push(next); // 添加到open表中
+      close.insert(next.val); // 添加到close表中，表示已经遍历完毕
     }
+    // 将地图回复至原状
     std::swap(map[p.x][p.y], map[x][y]);
   }
 
@@ -155,10 +159,10 @@ public:
   int getH(const Point &p) {
     int val = p.val;
     int tar = target.val;
-    int h = 8;
+    int h = 0;
     while (val != 0) {
-      if (val % 10 == tar % 10) {
-        h--;
+      if (val % 10 != tar % 10) {
+        h++;
       }
       val /= 10;
       tar /= 10;
