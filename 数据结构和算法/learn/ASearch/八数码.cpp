@@ -1,32 +1,40 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2024-06-11 22:00:25
- * @LastEditTime: 2024-06-11 23:40:18
+ * @LastEditTime: 2024-06-12 11:09:03
  * @Description: 八数码问题-A*算法
  */
 
+#include <algorithm>
 #include <iostream>
 #include <unordered_set>
 #include <queue>
 #include <vector>
+#include <memory>
 
 using std::vector;
-using std::cout;
 
 // 地图上的点-这里是八数码转int的值
 // 列入 123 456 780 转成 12345678
 struct Point {
-  Point *parent; // 父节点
-  int val;       // 八位数码的值
-  int h;         // 启发式函数值
-  int g;         // 实际距离
+  using _T = std::shared_ptr<Point>;
+  _T parent; // 父节点
+  int val;   // 八位数码的值
+  int h;     // 启发式函数值
+  int g;     // 实际距离
 
   // 3 * 3 地图中的xy坐标
   int x;
   int y;
 
-  Point(int val) :
+  // 禁止隐式转换
+  explicit Point(int val) noexcept :
     parent(nullptr), val(val), h(0), g(0), x(0), y(0) {
+  }
+
+  // 拷贝构造
+  Point(const Point &p) noexcept :
+    parent(p.parent), val(p.val), h(p.h), g(p.g), x(p.x), y(p.y) {
   }
 
   // 重载等于符号
@@ -41,9 +49,25 @@ struct Point {
 
   // 重载小于符号-用于设置优先队列
   bool operator<(const Point &p) const {
-    return this->F() < p.F();
+    return this->F() > p.F();
   }
 };
+
+std::ostream &operator<<(std::ostream &cout, const Point &p) {
+  int val = p.val;
+  vector<int> martix(9);
+  for (int i = 0; i < 9; i++) {
+    martix[i] = val % 10;
+    val /= 10;
+  }
+  for (int i = 2; i >= 0; i--) {
+    for (int j = 2; j >= 0; j--) {
+      cout << martix[i * 3 + j] << " ";
+    }
+    cout << "\n";
+  }
+  return cout;
+}
 
 class ASearch {
   vector<vector<int>> map;         // 地图数据
@@ -51,26 +75,28 @@ class ASearch {
   std::unordered_set<int> close;   // close表，存放已经访问过的点
   Point target;                    // 目标状态
   Point start;                     // 起始状态
+  int count;                       // 计数
 
 public:
   ASearch(const vector<vector<int>> &map, const vector<vector<int>> &target) :
-    map(map), target(MapToPoint(target)), start(MapToPoint(map)) {
+    map(map), target(MapToPoint(target)), start(MapToPoint(map)), count(0) {
   }
 
   // 开始搜索
   void Search() {
     // 添加起点作为初始元素
     open.push(start);
+    close.insert(start.val);
 
     while (!open.empty()) {
       // 取出f值最小的点
       Point p = open.top();
       open.pop();
-      close.insert(p.val);
 
       // 判断是否到达目标
       if (p == target) {
-        cout << "找到目标";
+        std::cout << "找到目标: 共计查找 " << count << " 个点\n";
+        getPath(p);
         break;
       }
 
@@ -79,30 +105,53 @@ public:
     }
   }
 
+  void getPath(const Point &p) {
+    // 获取路径
+    if (p.parent) {
+      getPath(*p.parent.get());
+    }
+    std::cout << p << "\n";
+  }
+
+  void setMap(const Point &p) {
+    int val = p.val;
+    for (int i = 2; i >= 0; i--) {
+      for (int j = 2; j >= 0; j--) {
+        map[i][j] = val % 10;
+        val /= 10;
+      }
+    }
+  }
+
   // 判断是否能添加到queue
   void addToQueue(Point &p, unsigned x, unsigned y) {
     if (x < 0 || x >= map.size() || y < 0 || y >= map[0].size()) {
       return;
     }
-    // 上下左右移动
+
     std::swap(map[p.x][p.y], map[x][y]);
     Point next(MapToPoint(map));
     if (!close.contains(next.val)) {
-      next.parent = &p;
+      next.parent = std::make_shared<Point>(Point(p));
       next.g = p.g + 1;
       next.h = getH(next);
       open.push(next);
+      close.insert(next.val);
     }
     std::swap(map[p.x][p.y], map[x][y]);
   }
 
   void moveToNext(Point &p) {
+    // 上下左右移动
+    setMap(p);
+    count++;
     addToQueue(p, p.x + 1, p.y);
     addToQueue(p, p.x - 1, p.y);
     addToQueue(p, p.x, p.y + 1);
     addToQueue(p, p.x, p.y - 1);
   }
 
+  // 获取h值
   int getH(const Point &p) {
     int val = p.val;
     int tar = target.val;
@@ -117,6 +166,7 @@ public:
     return h;
   }
 
+  // 将地图数据转换成Point数据
   Point MapToPoint(const vector<vector<int>> &vec) {
     // 把地图上的点转成Point
     Point p(0);
@@ -134,11 +184,13 @@ public:
 };
 
 int main() {
+  // 起始地图
   const vector<vector<int>> map = {
     {2, 8, 3},
     {1, 6, 4},
     {7, 0, 5},
   };
+  // 目标地图
   const vector<vector<int>> target = {
     {1, 2, 3},
     {8, 0, 4},
