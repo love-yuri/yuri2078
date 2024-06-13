@@ -139,14 +139,14 @@ public:
     return end - start;
   }
 
-  std::string setOutFile(std::string &&out) {
-    this->out_file = out;
+  std::string setOutFile(const std::string &file) {
+    this->out_file = file;
     return this->out_file;
   }
 
-  std::string setInFile(std::string &&out) {
-    this->out_file = out;
-    return this->out_file;
+  std::string setInFile(const std::string &file) {
+    this->in_file = file;
+    return this->in_file;
   }
 };
 
