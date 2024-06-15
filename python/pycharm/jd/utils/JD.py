@@ -1,3 +1,9 @@
+'''
+Author: love-yuri yuri2078170658@gmail.com
+Date: 2024-05-27 22:02:48
+LastEditTime: 2024-06-11 11:39:46
+Description: jd-Utils
+'''
 import json
 import pathlib
 import sys
@@ -91,6 +97,7 @@ class JD(QThread):
       if response.status_code == 200:
         if response.text is None or response.text == "":
           return []
+        info() << response.text
         for comment in response.json()['comments']:
           comments.append(Comment(**comment))
       else:
