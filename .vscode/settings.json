@@ -118,4 +118,6 @@
     "Codegeex.CompletionModel": "CodeGeeX Pro[Beta]",
     "Codegeex.GenerationPreference": "line by line",
     "Codegeex.CommitMessageStyle": "ConventionalCommits",
+    "Codegeex.SidebarUI.LanguagePreference": "中文",
+    "files.eol": "\n"
 }
