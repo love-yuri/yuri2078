@@ -83,7 +83,7 @@
         "-Wnull-dereference",
         "-Wold-style-cast",
         "-Woverloaded-virtual",
-        // "-Wpedantic",
+        "-Wpedantic",
         "-Wshadow",
         "-Wunused",
         "-pthread",
@@ -91,7 +91,7 @@
         "-fsanitize=address",
         "-fsanitize=undefined",
         // "-stdlib=libc++",
-        "-std=c++20"
+        "-std=c++11"
     ],
     "liveServer.settings.port": 5501,
     "cmake.sourceDirectory": "/home/yuri/learn/服务器开发实践/网络编程/practise/websocket",
@@ -119,5 +119,6 @@
     "Codegeex.GenerationPreference": "line by line",
     "Codegeex.CommitMessageStyle": "ConventionalCommits",
     "Codegeex.SidebarUI.LanguagePreference": "中文",
-    "files.eol": "\n"
+    "files.eol": "\n",
+    "clangd.compileCommands": "${workspaceFolder}/build/compile_commands.json",
 }
