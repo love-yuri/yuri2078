@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2024-04-23 14:56:27
+ * @LastEditTime: 2024-09-25 13:51:48
  * @Description: 日志库基于c11，可写入文件
  */
 
@@ -118,12 +118,12 @@ std::ostringstream& operator<<(std::ostringstream &os, const std::vector<int> &v
 
 } // namespace yuri
 
-#ifndef yinfo
-#define yinfo ::yuri::Log(__func__, __LINE__)
+#ifndef info
+#define info ::yuri::Log(__func__, __LINE__)
 #endif
 
-#ifndef yerror
-#define yerror ::yuri::Log(__func__, __LINE__, true)
+#ifndef error
+#define error ::yuri::Log(__func__, __LINE__, true)
 #endif
 
 #endif /* ifndef YURI_LOG_HPP */
