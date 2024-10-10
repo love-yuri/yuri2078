@@ -2,9 +2,10 @@
 
 ## 全局设置
 
-+ ``` git config --global user.name "yuri2078" ``` 设置用户名
++ ``` git config --global user.name "love-yuri" ``` 设置用户名
 + ``` git config --global user.email "yuri2078170658@gmail.com" ``` 设置邮箱账号
 + ``` git config --global http.sslVerify "false" ``` 取消全局验证
++ `ssh-keygen -t ed25519 -C "yuri2078170658@gmail.com"` 生成密钥
 
 ## 取消全局代理
 
@@ -49,3 +50,16 @@ git push -u origin main
 ## githun 仓库密钥 更新时间 1.9
 
 `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`
+
+## curl 报错
+
+1. `https://www.ipaddress.com/website/raw.githubusercontent.com/` 查看ip地址
+
+2. ```
+   185.199.108.133 raw.githubusercontent.com 
+   185.199.109.133 raw.githubusercontent.com 
+   185.199.110.133 raw.githubusercontent.com 
+   185.199.111.133 raw.githubusercontent.com 
+   ```
+
+   
