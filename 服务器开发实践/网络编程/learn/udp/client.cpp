@@ -1,7 +1,7 @@
 /*
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2024-10-10 14:05:51
- * @LastEditTime: 2024-10-22 11:57:23
+ * @LastEditTime: 2024-10-23 16:27:37
  * @Description:
  */
 #include "UdpClient.h"
@@ -9,7 +9,7 @@
 #include <yuri/yuri_log.hpp>
 
 int main() {
-  UdpClient client(2079);
+  UdpClient client(2078);
   std::thread thread;
   thread = std::thread([&client]() {
     while (true) {
