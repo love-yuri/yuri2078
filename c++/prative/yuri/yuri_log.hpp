@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2024-09-25 13:51:48
+ * @LastEditTime: 2024-10-23 16:25:12
  * @Description: 日志库基于c11，可写入文件
  */
 
@@ -16,50 +16,66 @@
 #include <sstream>
 #include <ctime>
 
+#ifdef _WIN32
+  #include <windows.h>
+#endif
+
 namespace yuri {
 
 static std::mutex mutex;
 static bool write_in_file = false; // 是否写入文件
 
-inline static void logResult(const std::string &msg, std::ostream &cout) {
-  cout << msg;
-  std::endl(cout);
+static void logResult(const std::string &msg, std::ostream &ostream) {
+  ostream << msg;
+  std::endl(ostream);
 }
 
 /* 将日志结果设置为写入文件 */
-inline static void setWriteInFile() {
+static void setWriteInFile() {
   write_in_file = true;
 }
 
-class Log {
-private:
+class Log final {
   std::ostringstream ost;
 
 public:
-  Log(const std::string &func, int line) {
-    std::time_t currentTime = std::time(nullptr);
-    std::tm *localTime = std::localtime(&currentTime);
+  Log(const std::string &func, const int line) {
+    const std::time_t currentTime = std::time(nullptr);
+    const std::tm *localTime = std::localtime(&currentTime);
     char formattedTime[9];
     std::strftime(formattedTime, 9, "%H:%M:%S", localTime);
     ost << formattedTime << " " << func << ":" << line << " -> ";
+
+#ifdef _WIN32
+    const auto hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD mode;
+    GetConsoleMode(hConsole, &mode);
+    SetConsoleMode(hConsole, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+#endif
   }
 
-  Log(const std::string &func, int line, bool) {
+  Log(const std::string &func, const int line, bool) {
     if (!write_in_file) {
       ost << "\x1b[31m";
     }
-    std::time_t currentTime = std::time(nullptr);
-    std::tm *localTime = std::localtime(&currentTime);
+    const std::time_t currentTime = std::time(nullptr);
+    const std::tm *localTime = std::localtime(&currentTime);
     char formattedTime[9];
     std::strftime(formattedTime, 9, "%H:%M:%S", localTime);
     ost << formattedTime << " " << func << ":" << line << " -> ";
+#ifdef _WIN32
+    const auto hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD mode;
+    GetConsoleMode(hConsole, &mode);
+    SetConsoleMode(hConsole, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+#endif
   }
 
-  virtual ~Log() {
+  ~Log() {
     mutex.lock();
     if (write_in_file) {
-      std::fstream fst;
       try {
+        std::fstream fst;
         fst.open("log.txt", std::ios::app);
         logResult(ost.str(), fst);
         fst.flush();
@@ -80,7 +96,7 @@ public:
     return *this;
   }
 
-  template<typename T>
+  template <typename T>
   Log &operator<<(const std::vector<T> &vec) {
     *this << "[";
     for (size_t i = 0; i < vec.size(); i++) {
@@ -104,7 +120,7 @@ public:
 };
 
 template <typename T>
-std::ostringstream& operator<<(std::ostringstream &os, const std::vector<int> &vec) {
+std::ostringstream &operator<<(std::ostringstream &os, const std::vector<int> &vec) {
   os << "[";
   for (size_t i = 0; i < vec.size(); i++) {
     os << vec[i];
