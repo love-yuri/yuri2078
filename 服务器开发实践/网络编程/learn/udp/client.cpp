@@ -1,15 +1,18 @@
+/*
+ * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @Date: 2024-10-10 14:05:51
+ * @LastEditTime: 2024-10-23 16:27:37
+ * @Description:
+ */
 #include "UdpClient.h"
-#include "UdpServer.h"
-#include <chrono>
-#include <format>
 #include <thread>
+#include <yuri/yuri_log.hpp>
 
 int main() {
-
   UdpClient client(2078);
   std::thread thread;
   thread = std::thread([&client]() {
-    while(true) {
+    while (true) {
       if (client.recvFrom() == "") {
         error << "get message error!";
         return;
@@ -17,7 +20,7 @@ int main() {
     }
   });
 
-  std::cout << "线程 id -> " << std::this_thread::get_id();
+  info << "线程 id -> " << std::this_thread::get_id();
 
   while (true) {
     std::string msg;
@@ -27,11 +30,11 @@ int main() {
     }
 
     client.sendTo(msg);
+    info << "发送 -> " << msg;
   }
 
-
   if (thread.joinable()) {
-    thread .join();
+    thread.join();
   }
   return 0;
 }

@@ -1,3 +1,9 @@
+/*
+ * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @Date: 2024-10-10 14:05:51
+ * @LastEditTime: 2024-10-21 11:04:45
+ * @Description:
+ */
 #ifndef SCOKADDR_H_Y
 #define SCOKADDR_H_Y
 
@@ -6,7 +12,7 @@
 #include <format>
 #include <cerrno>
 #include <cstring>
-#include <yuri.h>
+#include <yuri/yuri_log.hpp>
 
 enum SocketState { 未连接,
                    客户端,
