@@ -126,6 +126,60 @@ public partial class MainWindowViewModel : ReactiveObject {
    }
    ```
 
-5. smartsem
+5. `MainWindowView` 添加导航界面
 
-yidontek
+   ```xaml
+   <rxui:RoutedViewHost Grid.Row="0" Router="{Binding Router}">
+       <rxui:RoutedViewHost.DefaultContent>
+           <TextBlock Text="Default content"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center" />
+       </rxui:RoutedViewHost.DefaultContent>
+       <rxui:RoutedViewHost.ViewLocator>
+           <avaloniaApplication:AppViewLocator />
+       </rxui:RoutedViewHost.ViewLocator>
+   </rxui:RoutedViewHost>
+   ```
+
+6. `MainWindowView.cs` 构造函数添加xmlloder
+
+   ```c#
+   public partial class MainWindow : ReactiveWindow<MainWindow> {
+       public MainWindow() {
+           AvaloniaXamlLoader.Load(this);
+       }
+   }
+   ```
+
+   
+
+7. 编写路由适配规则
+
+   ```c#
+   public class AppViewLocator : IViewLocator
+   {
+       public IViewFor ResolveView<T>(T? viewModel, string? contract = null) => viewModel switch {
+           SettingWindowViewModel context => new SettingWindowView { DataContext = context },
+           _ => throw new ArgumentOutOfRangeException(nameof(viewModel))
+       };
+   }
+   ```
+
+8.  最后在`AppBuilder` 中添加 `.UseReactiveUI()`
+
+   ```c#
+   sealed class Program {
+       [STAThread]
+       public static void Main(string[] args) => BuildAvaloniaApp()
+           .StartWithClassicDesktopLifetime(args);
+   
+       private static AppBuilder BuildAvaloniaApp()
+           => AppBuilder.Configure<App>()
+               .UsePlatformDetect()
+               .WithInterFont()
+               .LogToTrace()
+               .UseReactiveUI();
+   }
+   ```
+
+   
