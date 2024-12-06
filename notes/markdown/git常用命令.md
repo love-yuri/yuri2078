@@ -24,6 +24,7 @@
 + ``` git reset --hard commit_id ``` 回退到某个版本
 + ``` git push main ``` 推送到远程 main 分支
 + `git update-index --assume-unchanged <file>` git不再追踪该文件的更改   
++ `git reset --hard HEAD~1` 回退当前merge（尚未提交）
 
 ## 远程覆盖本地
 
