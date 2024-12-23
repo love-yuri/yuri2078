@@ -94,7 +94,6 @@
     "-std=c++11"
   ],
   "liveServer.settings.port": 5501,
-  "cmake.sourceDirectory": "/home/yuri/learn/服务器开发实践/网络编程/practise/websocket",
   // 头部注释
   "fileheader.customMade": {
     "Author": "git config user.name && git config user.email", // 同时获取用户名与邮箱
@@ -121,5 +120,6 @@
   "Codegeex.SidebarUI.LanguagePreference": "中文",
   "files.eol": "\n",
   "clangd.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+  "cmake.sourceDirectory": "${workspaceFolder}/CMakeLists.txt",
   "cmake.ignoreCMakeListsMissing": true
 }
