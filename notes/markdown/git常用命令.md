@@ -21,26 +21,18 @@
 + ``` git branch -M main ``` 新建分支
 + ``` git push -u origin main ``` 推送文件到main 分支
 + ``` git log ``` 查看历史提交日志
-+ ``` git reset --hard commit_id ``` 回退到某个版本
 + ``` git push main ``` 推送到远程 main 分支
 + `git update-index --assume-unchanged <file>` git不再追踪该文件的更改   
-+ `git reset --hard HEAD~1` 回退当前merge（尚未提交）
 
-## 远程覆盖本地
+## 回退操作
 
-+ ``` git fetch --all ```
-+ ``` git reset --hard origin/main ```
-+ ``` git pull ```
+- ```` git fetch --all ```` 拉取所有远程更新
+- ``` git reset --hard commit_id ``` 回退到指定commit
+- `git reset --hard HEAD~1` 回退指定个数的commit
+- ` git push --force origin main` 强制推送-覆盖远程分支
 
-```bash
-git config --global http.sslVerify "false"
-git config --global --unset http.proxy
-git config --global --unset https.proxy 
-git add ..
-git commit -m "main"
-git push -u origin main
-
-```
+- `git reset --hard origin/main` 回退/同步到远程分支 （丢弃本地修改)
+- `git reset origin/master` 回退/同步到远程分支 （保留本地修改)
 
 ## linux 常用修复命令
 
@@ -48,19 +40,15 @@ git push -u origin main
 
      ` git config --global credential.helper store `
 
-## githun 仓库密钥 更新时间 1.9
-
-`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`
-
 ## curl 报错
 
 1. `https://www.ipaddress.com/website/raw.githubusercontent.com/` 查看ip地址
 
-2. ```
+2. hosts添加以下内容
+
+3. ```
    185.199.108.133 raw.githubusercontent.com 
    185.199.109.133 raw.githubusercontent.com 
    185.199.110.133 raw.githubusercontent.com 
    185.199.111.133 raw.githubusercontent.com 
    ```
-
-   
