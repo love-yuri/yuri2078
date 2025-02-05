@@ -23,6 +23,8 @@
 + ``` git log ``` 查看历史提交日志
 + ``` git push main ``` 推送到远程 main 分支
 + `git update-index --assume-unchanged <file>` git不再追踪该文件的更改   
++ `git reset --hard HEAD~1` 回退当前merge（尚未提交）
++ `git clone --recurse-submodules <主仓库地址>` 克隆并更新子仓库
 
 ## 回退操作
 

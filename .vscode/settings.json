@@ -120,7 +120,6 @@
   "Codegeex.SidebarUI.LanguagePreference": "中文",
   "files.eol": "\n",
   "clangd.compileCommands": "${workspaceFolder}/build/compile_commands.json",
-  // cmake配置
-  "cmake.sourceDirectory": "${workspaceFolder}",
+  "cmake.sourceDirectory": "${workspaceFolder}/CMakeLists.txt",
   "cmake.ignoreCMakeListsMissing": true
 }
