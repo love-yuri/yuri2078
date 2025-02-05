@@ -34,7 +34,7 @@
   "C_Cpp.intelliSenseEngineFallback": "disabled",
   "C_Cpp.intelliSenseEngine": "disabled",
   "C_Cpp.autocomplete": "disabled",
-  "clangd.path": "/usr/bin/clangd", // clangd 地址
+  // "clangd.path": "/usr/bin/clangd", // clangd 地址
   "editor.fontFamily": "Fira Code Medium", // 编辑器字体
   "editor.codeLensFontFamily": "Fira Code Medium",
   // "editor.fontFamily": "Consolas", // 编辑器字体 windows
@@ -94,7 +94,6 @@
     "-std=c++11"
   ],
   "liveServer.settings.port": 5501,
-  "cmake.sourceDirectory": "/home/yuri/learn/服务器开发实践/网络编程/practise/websocket",
   // 头部注释
   "fileheader.customMade": {
     "Author": "git config user.name && git config user.email", // 同时获取用户名与邮箱
@@ -111,8 +110,8 @@
   "editor.quickSuggestions": {
     "strings": "on"
   },
-  "leetcode.workspaceFolder": "/home/yuri/yuri2078/leetcode",
-  "php.validate.executablePath": "/usr/bin/php",
+  // "leetcode.workspaceFolder": "/home/yuri/yuri2078/leetcode",
+  // "php.validate.executablePath": "/usr/bin/php",
   "Codegeex.Comment.LanguagePreference": "中文",
   "Codegeex.Chat.LanguagePreference": "中文",
   "Codegeex.CompletionModel": "CodeGeeX Pro[Beta]",
@@ -121,5 +120,7 @@
   "Codegeex.SidebarUI.LanguagePreference": "中文",
   "files.eol": "\n",
   "clangd.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+  // cmake配置
+  "cmake.sourceDirectory": "${workspaceFolder}",
   "cmake.ignoreCMakeListsMissing": true
 }
