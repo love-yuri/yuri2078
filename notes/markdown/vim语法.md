@@ -38,6 +38,7 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim\
 - 上下左右 -> `kjhl`
 - `^` 移动到行首`$` 移动到行尾
 - `w` 跳到下一个单词开头 `e` 下一个单词结尾
+- `b` 跳到上一个单词开头 `e` 上一个单词结尾
 -  `/vim` 向下查找vim `？vim` 向上查找vim
 -  `*` 向下查找光标所在单词 `#` 向上查找光标所在单词
 -  `ctrl b` 向上翻页 `ctrl f` 向下翻页 
@@ -50,6 +51,8 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim\
 - `r+新字母` -- 修改字符
 - `选中后 x | d` 删除选中内容
 - `选中后 c` 删除选中内容并且将光标切换为插入模式
+- `dw` -- 删除当前单词不进入编辑模式
+- `cw` -- 删除当前单词并进入编辑模式
 
 ## 复制
 
