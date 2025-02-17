@@ -23,7 +23,6 @@
 + ``` git log ``` 查看历史提交日志
 + ``` git push main ``` 推送到远程 main 分支
 + `git update-index --assume-unchanged <file>` git不再追踪该文件的更改   
-+ `git reset --hard HEAD~1` 回退当前merge（尚未提交）
 + `git clone --recurse-submodules <主仓库地址>` 克隆并更新子仓库
 
 ## 回退操作
@@ -35,6 +34,10 @@
 
 - `git reset --hard origin/main` 回退/同步到远程分支 （丢弃本地修改)
 - `git reset origin/master` 回退/同步到远程分支 （保留本地修改)
+- `git reset --hard HEAD~1` 撤销commit 并且不会保留更改
+- `git reset --mixed HEAD~1` 撤销commit 并且保留更改 - 不会添加到暂存区
+- `git reset --soft HEAD~1` 撤销commit 并且保留更改 - 会添加到暂存区
+- `git revert HEAD` 撤销已经push的commit 然后使用git push --force origin main 强制推送
 
 ## linux 常用修复命令
 
