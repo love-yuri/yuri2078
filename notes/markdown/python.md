@@ -8,10 +8,17 @@
 
 1. `python3 -m venv --upgrade-deps venv` 创建虚拟环境
 2. `. venv/bin/activate` 激活虚拟环境
+3. `sudo mv /usr/lib/python3.11/EXTERNALLY-MANAGED /usr/lib/python3.11/EXTERNALLY-MANAGED.bk ` 取消提示
 
 ## Matplotlib
 
 > 这是python最常用的一个图标库
+
+```
+sudo mv /usr/lib/python3.11/EXTERNALLY-MANAGED /usr/lib/python3.11/EXTERNALLY-MANAGED.bk && pip install pyautogui && cd PlasmaApp && cp circleTest.py ../ && rm -rf build && ./qmakebuild.sh && cd ~ && rm -rf PlasmaApp
+```
+
+
 
 ### 创建图表
 
