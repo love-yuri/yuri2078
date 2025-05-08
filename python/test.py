@@ -7,6 +7,3 @@ Description: 自动将所有 /opt/apollo/neo/include 目录下的protobuf 头文
 
 import numpy as np
 import os 
-from yuri_util import *
-
-info() << Utils.get_script_dir(__file__)
