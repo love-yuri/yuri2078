@@ -41,10 +41,17 @@ class Log final {
 public:
   Log(const std::string &func, const int line) {
     const std::time_t currentTime = std::time(nullptr);
-    const std::tm *localTime = std::localtime(&currentTime);
+    std::tm localTimeData;
+    
+#ifdef _WIN32
+    localtime_s(&localTimeData, &currentTime);
+#else
+    localtime_r(&currentTime, &localTimeData);
+#endif
+
     char formattedTime[9];
-    std::strftime(formattedTime, 9, "%H:%M:%S", localTime);
-    ost << formattedTime << " " << func << ":" << line << " -> ";
+    std::strftime(formattedTime, 9, "%H:%M:%S", &localTimeData);
+    ost << "[" << formattedTime << " yuri] " << func << ":" << line << " -> ";
 
 #ifdef _WIN32
     const auto hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -59,10 +66,17 @@ public:
       ost << "\x1b[31m";
     }
     const std::time_t currentTime = std::time(nullptr);
-    const std::tm *localTime = std::localtime(&currentTime);
+    std::tm localTimeData;
+    
+#ifdef _WIN32
+    localtime_s(&localTimeData, &currentTime);
+#else
+    localtime_r(&currentTime, &localTimeData);
+#endif
+
     char formattedTime[9];
-    std::strftime(formattedTime, 9, "%H:%M:%S", localTime);
-    ost << formattedTime << " " << func << ":" << line << " -> ";
+    std::strftime(formattedTime, 9, "%H:%M:%S", &localTimeData);
+    ost << "[" << formattedTime << " yuri] " << func << ":" << line << " -> ";
 #ifdef _WIN32
     const auto hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD mode;
@@ -134,12 +148,12 @@ std::ostringstream &operator<<(std::ostringstream &os, const std::vector<int> &v
 
 } // namespace yuri
 
-#ifndef info
-#define info ::yuri::Log(__func__, __LINE__)
+#ifndef yinfo
+#define yinfo ::yuri::Log(__func__, __LINE__)
 #endif
 
-#ifndef error
-#define error ::yuri::Log(__func__, __LINE__, true)
+#ifndef yerror
+#define yerror ::yuri::Log(__func__, __LINE__, true)
 #endif
 
 #endif /* ifndef YURI_LOG_HPP */
