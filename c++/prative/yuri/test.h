@@ -7,5 +7,5 @@
 #include "yuri_log.hpp"
 
 inline void fun() {
-  info << "yuri is good";
+  yinfo << "yuri is good";
 }
