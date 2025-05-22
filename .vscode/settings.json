@@ -22,6 +22,9 @@
   "C_Cpp.errorSquiggles": "enabled",
   //设置光标丝滑显示
   "editor.cursorSmoothCaretAnimation": "on",
+  "editor.cursorBlinking": "expand",       // 光标闪烁效果（expand/phase/solid等）
+  "editor.cursorStyle": "line",            // 光标样式（line/block/underline）
+  "editor.cursorWidth": 2,                 // 光标宽度（像素）
   "workbench.list.smoothScrolling": true,
   "editor.smoothScrolling": true,
   "terminal.integrated.smoothScrolling": true,
@@ -34,7 +37,6 @@
   "C_Cpp.intelliSenseEngineFallback": "disabled",
   "C_Cpp.intelliSenseEngine": "disabled",
   "C_Cpp.autocomplete": "disabled",
-  // "clangd.path": "/usr/bin/clangd", // clangd 地址
   "editor.fontFamily": "Fira Code Medium", // 编辑器字体
   "editor.codeLensFontFamily": "Fira Code Medium",
   // "editor.fontFamily": "Consolas", // 编辑器字体 windows
@@ -62,7 +64,7 @@
     // "--log=verbose", // 让 Clangd 生成更详细的日志
     "--pch-storage=memory", // pch 优化的位置(Memory 或 Disk,前者会增加内存开销，但会提升性能)
     "--pretty", // 输出的 JSON 文件更美观
-    // "--std=c++20",
+    // "--std=c++23",
     "--ranking-model=decision_forest", // 建议的排序方案：hueristics (启发式), decision_forest (决策树)
     "-j=12" // 同时开启的任务数量
   ],
@@ -91,7 +93,7 @@
     "-fsanitize=address",
     "-fsanitize=undefined",
     // "-stdlib=libc++",
-    "-std=c++11"
+    "-std=c++23"
   ],
   "liveServer.settings.port": 5501,
   // 头部注释
@@ -111,7 +113,6 @@
     "strings": "on"
   },
   // "leetcode.workspaceFolder": "/home/yuri/yuri2078/leetcode",
-  // "php.validate.executablePath": "/usr/bin/php",
   "Codegeex.Comment.LanguagePreference": "中文",
   "Codegeex.Chat.LanguagePreference": "中文",
   "Codegeex.CompletionModel": "CodeGeeX Pro[Beta]",
@@ -121,5 +122,6 @@
   "files.eol": "\n",
   "clangd.compileCommands": "${workspaceFolder}/build/compile_commands.json",
   "cmake.sourceDirectory": "${workspaceFolder}/CMakeLists.txt",
-  "cmake.ignoreCMakeListsMissing": true
+  "cmake.ignoreCMakeListsMissing": true,
+  "cSpell.words": ["yinfo", "yerror"]
 }
