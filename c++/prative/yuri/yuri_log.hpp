@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2025-05-22 15:19:01
+ * @LastEditTime: 2025-05-22 15:27:23
  * @Description: 日志库基于c11，可写入文件
  */
 
@@ -24,11 +24,6 @@ namespace yuri {
 
 static std::mutex mutex;
 static bool write_in_file = false; // 是否写入文件
-
-static void logResult(const std::string &msg, std::ostream &ostream) {
-  ostream << msg;
-  std::endl(ostream);
-}
 
 /* 将日志结果设置为写入文件 */
 static __attribute__((unused))
@@ -61,6 +56,11 @@ class Log final {
     GetConsoleMode(hConsole, &mode);
     SetConsoleMode(hConsole, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 #endif
+  }
+
+  void logResult(const std::string &msg, std::ostream &ostream) {
+    ostream << msg;
+    std::endl(ostream);
   }
 
 public:
@@ -136,7 +136,7 @@ std::ostringstream &operator<<(std::ostringstream &os, const std::vector<int> &v
 } // namespace yuri
 
 #ifndef yinfo
-#define yinfo ::yuri::Log(__func__, __LINE__)
+#define yinfo ::yuri::Log(__func__, __LINE__, false)
 #endif
 
 #ifndef yerror
