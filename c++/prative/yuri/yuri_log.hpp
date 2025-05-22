@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2024-10-23 16:25:12
+ * @LastEditTime: 2025-05-22 15:19:01
  * @Description: 日志库基于c11，可写入文件
  */
 
@@ -17,7 +17,7 @@
 #include <ctime>
 
 #ifdef _WIN32
-  #include <windows.h>
+#include <windows.h>
 #endif
 
 namespace yuri {
@@ -31,18 +31,21 @@ static void logResult(const std::string &msg, std::ostream &ostream) {
 }
 
 /* 将日志结果设置为写入文件 */
-static void setWriteInFile() {
+static __attribute__((unused))
+void setWriteInFile() {
   write_in_file = true;
 }
 
 class Log final {
   std::ostringstream ost;
+  using stringRef = const std::string &;
 
-public:
-  Log(const std::string &func, const int line) {
+  void formatMessage(stringRef func, const int line, bool isError) {
+    if (!write_in_file && isError) {
+      ost << "\x1b[31m";
+    }
     const std::time_t currentTime = std::time(nullptr);
-    std::tm localTimeData;
-    
+    std::tm localTimeData{};
 #ifdef _WIN32
     localtime_s(&localTimeData, &currentTime);
 #else
@@ -52,7 +55,6 @@ public:
     char formattedTime[9];
     std::strftime(formattedTime, 9, "%H:%M:%S", &localTimeData);
     ost << "[" << formattedTime << " yuri] " << func << ":" << line << " -> ";
-
 #ifdef _WIN32
     const auto hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD mode;
@@ -61,28 +63,13 @@ public:
 #endif
   }
 
-  Log(const std::string &func, const int line, bool) {
-    if (!write_in_file) {
-      ost << "\x1b[31m";
-    }
-    const std::time_t currentTime = std::time(nullptr);
-    std::tm localTimeData;
-    
-#ifdef _WIN32
-    localtime_s(&localTimeData, &currentTime);
-#else
-    localtime_r(&currentTime, &localTimeData);
-#endif
+public:
+  Log(const std::string &func, const int line) {
+    formatMessage(func, line, false);
+  }
 
-    char formattedTime[9];
-    std::strftime(formattedTime, 9, "%H:%M:%S", &localTimeData);
-    ost << "[" << formattedTime << " yuri] " << func << ":" << line << " -> ";
-#ifdef _WIN32
-    const auto hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    DWORD mode;
-    GetConsoleMode(hConsole, &mode);
-    SetConsoleMode(hConsole, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-#endif
+  Log(const std::string &func, const int line, bool) {
+    formatMessage(func, line, true);
   }
 
   ~Log() {
