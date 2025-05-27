@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2025-05-22 15:27:23
+ * @LastEditTime: 2025-05-27 15:53:03
  * @Description: 日志库基于c11，可写入文件
  */
 
@@ -25,20 +25,17 @@ namespace yuri {
 static std::mutex mutex;
 static bool write_in_file = false; // 是否写入文件
 
-/* 将日志结果设置为写入文件 */
-static __attribute__((unused))
-void setWriteInFile() {
-  write_in_file = true;
-}
-
 class Log final {
   std::ostringstream ost;
   using stringRef = const std::string &;
+  
+  bool isError = false;
 
-  void formatMessage(stringRef func, const int line, bool isError) {
+  void formatMessage(stringRef func, const int line) {
     if (!write_in_file && isError) {
       ost << "\x1b[31m";
     }
+    
     const std::time_t currentTime = std::time(nullptr);
     std::tm localTimeData{};
 #ifdef _WIN32
@@ -58,18 +55,14 @@ class Log final {
 #endif
   }
 
-  void logResult(const std::string &msg, std::ostream &ostream) {
+  static void logResult(const std::string &msg, std::ostream &ostream) {
     ostream << msg;
     std::endl(ostream);
   }
 
 public:
-  Log(const std::string &func, const int line) {
-    formatMessage(func, line, false);
-  }
-
-  Log(const std::string &func, const int line, bool) {
-    formatMessage(func, line, true);
+  Log(const std::string &func, const int line, bool flag): isError(flag) {
+    formatMessage(func, line);
   }
 
   ~Log() {
@@ -82,11 +75,11 @@ public:
         fst.flush();
         fst.close();
       } catch (const std::exception &e) {
-        std::cout << e.what();
+        std::cerr << e.what();
       }
     } else {
       ost << "\x1b[0m";
-      logResult(ost.str(), std::cout);
+      logResult(ost.str(), isError ? std::cerr : std::cout);
     }
     mutex.unlock();
   }
