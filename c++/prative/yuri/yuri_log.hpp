@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2025-05-30 14:44:26
+ * @LastEditTime: 2025-05-30 14:55:11
  * @Description: 优化的日志库基于c++11，支持更多类型和更美观的输出
  */
 
@@ -75,9 +75,20 @@ private:
     return mutex;
   }
 
+  /**
+    * @brief 静态成员函数，用于控制是否将日志写入文件
+   */
   static bool &writeInFile() {
     static bool write_in_file = false;
     return write_in_file;
+  }
+
+  /**
+    * @brief 静态成员函数，用于控制是否使用std::cerr输出错误日志
+   */
+  static bool &useStdError() {
+    static bool use_std_cerr = false;
+    return use_std_cerr;
   }
 
   void formatMessage(stringRef func, const int line) {
@@ -141,7 +152,7 @@ private:
     bool first = true;
     for (const auto &pair : container) {
       if (!first) {
-        ost << ",\n";
+        ost << "\n";
       }
       first = false;
       ost << std::string(INDENT_SIZE, ' ')  << pair.first << ": ";
@@ -179,9 +190,10 @@ public:
       }
     } else {
       ost << '\n';
+      std::ostream &ostream = useStdError() && isError ? std::cerr : std::cout;
       // 统一使用 std::cout 并强制刷新，确保输出顺序
-      std::cout << ost.str();
-      std::cout.flush();
+      ostream << ost.str();
+      ostream.flush();
     }
   }
 
@@ -278,15 +290,6 @@ public:
   Log &operator<<(const std::string &str) {
     ost << str;
     return *this;
-  }
-
-  // 静态方法控制文件输出
-  static void enableFileOutput(bool enable = true) {
-    writeInFile() = enable;
-  }
-
-  static bool isFileOutputEnabled() {
-    return writeInFile();
   }
 };
 
