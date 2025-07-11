@@ -20,3 +20,5 @@
 **/log.txt
 **/*.csv
 **/*.zip
+/*.sql
+/*.txt
