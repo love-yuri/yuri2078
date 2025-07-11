@@ -1,32 +1,34 @@
 '''
 Author: love-yuri yuri2078170658@gmail.com
 Date: 2024-08-05 12:21:53
-LastEditTime: 2024-08-18 21:01:40
+LastEditTime: 2025-07-03 11:10:26
 Description:
 '''
 import requests
-from bs4 import BeautifulSoup # type: ignore
+from bs4 import BeautifulSoup  # type: ignore
 import json
 import time
 
-url = "https://apollo.baidu.com/community/competition/35/{}"
+url = "https://apollo.baidu.com/community/competition/47/{}"
 
 # url = "https://apollo.baidu.com/api/v1/competition/question/environment/list?taskId=66a8bce072c09b06bc90a826"
 
 headers = {
-  "referer": "https://apollo.baidu.com/community/competition/35/86008",
+  "referer": "https://apollo.baidu.com/community/competition/47/143078",
   "Cookie": ""
   "userId=2; "
-  "connect.sid=s:J9t8ztNy6J4iJsTwhf5-uxvgo7h-uPvD.X179BTQTAm9QrEC7SoOOFHA3TozGdlnRZA506qYOo5g",
+  "connect.sid=s%3Abo1qC5Wv-drRX-rlEN3o4dhl1IQnYFcV.az0x594W8eOhhID3dNaDxBWAvkNQvxJzYViBLZxEzEI",
 }
 
-start = 91020
+start = 143078
 
 while True:
 
   try:
     response = requests.get(url.format(start), headers=headers)
     soup = BeautifulSoup(response.text, 'html.parser')
+
+    # print(f'正在处理 id: {start} {response.text}')
 
     # 查找所有的 script 标签
     scripts = soup.find_all('script')
@@ -40,13 +42,13 @@ while True:
         str = ''
         for item in data['contents']:
           str += f' {item['questionName']}: 得分: {item["score"]}, 用时: {item["taskDuration"]}, taskId: {item['taskId']}   '
-        f.write(f'id: {start} 总分: {data["totalScore"]}, 总时长: {data['totalDuration']}, {str}\n')
-        print(f'id: {start}  总分: {data["totalScore"]}, 总时长: {data['totalDuration']}')
+        f.write(
+            f'id: {start} 总分: {data["totalScore"]}, 总时长: {data['totalDuration']}, {str}\n')
+        print(
+            f'id: {start}  总分: {data["totalScore"]}, 总时长: {data['totalDuration']}')
 
   except Exception as e:
     print("Error: ", e)
-  
+
   start += 1
   time.sleep(2)
-
-  
