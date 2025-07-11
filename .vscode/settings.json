@@ -123,5 +123,6 @@
   "clangd.compileCommands": "${workspaceFolder}/build/compile_commands.json",
   "cmake.sourceDirectory": "${workspaceFolder}/CMakeLists.txt",
   "cmake.ignoreCMakeListsMissing": true,
-  "cSpell.words": ["yinfo", "yerror"]
+  "cSpell.words": ["yinfo", "yerror"],
+  "python.analysis.extraPaths": ["./"],
 }
