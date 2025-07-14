@@ -1,7 +1,7 @@
 '''
 Author: love-yuri yuri2078170658@gmail.com
 Date: 2024-10-03 20:48:19
-LastEditTime: 2025-07-04 11:29:17
+LastEditTime: 2025-07-13 18:04:49
 Description: 
 '''
 import re
@@ -34,7 +34,7 @@ def find_score_400(file_path):
       match = re.search(regex, line)
       if match:
         score = float(match.group(2))
-        if score >= 600:
+        if score >= 400:
           scores_400.append({
               'id': match.group(1),
               'score': score,
@@ -53,29 +53,29 @@ def find_score_400(file_path):
 
 
 # 指定文件路径
-file_path = 'data3.txt'  # 替换为你的文件路径
+file_path = '/home/yuri/love-yuri/yuri2078/python/apollo/data3.txt'  # 替换为你的文件路径
 
 # 执行查找
 results = find_score_400(file_path)
 
 # 输出结果
 if results:
-  print(f"共有数据 {da} 条，找到总分为600及以上的数据 {len(results)} 条。")
+  print(f"共有数据 {da} 条，找到总分为400及以上的数据 {len(results)} 条。")
   print("按总分和耗时排序后的前20项数据:")
-  for i, result in enumerate(results[:30], 1):
+  for i, result in enumerate(results[:150], 1):
     print(
         f"{i}. id: {result['id']}, 总分: {result['score']}, 总时长: {result['time']}")
 
     print(f"   xh_2025_狭窄道路通行: {result['xh_2025_狭窄道路通行']}")
     print(f"   xh_2025_施工区域通行: {result['xh_2025_施工区域通行']}")
-    print(f"   xh_2025_交通标志场景: {result['xh_2025_交通标志场景']}")
+    # print(f"   xh_2025_交通标志场景: {result['xh_2025_交通标志场景']}")
     print(f"   xh_2025_交通灯场景: {result['xh_2025_交通灯场景']}")
-    print(f"   xh_2025_动态避障场景: {result['xh_2025_动态避障场景']}")
+    # print(f"   xh_2025_动态避障场景: {result['xh_2025_动态避障场景']}")
     print(f"   xh_2025_自主泊车场景: {result['xh_2025_自主泊车场景']}")
 
   # 统计四个场景的最优得分, 结合总分和耗时
   best_scores = {scene: None for scene in [
-      'xh_2025_自主泊车场景', 'xh_2025_动态避障场景', 'xh_2025_交通灯场景', 'xh_2025_施工区域通行', 'xh_2025_交通标志场景', 'xh_2025_狭窄道路通行']}
+      'xh_2025_自主泊车场景', 'xh_2025_交通灯场景', 'xh_2025_施工区域通行',  'xh_2025_狭窄道路通行']}
 
   for scene in best_scores.keys():
     best_scores[scene] = max(

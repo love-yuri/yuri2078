@@ -1,16 +1,13 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2024-06-15 21:45:04
- * @LastEditTime: 2025-05-22 15:19:42
+ * @LastEditTime: 2025-07-12 22:55:38
  * @Description:
  */
 
-#include "./yuri/yuri_log.hpp"
-
-// #include <iostream>
-// #define yinfo std::cout
+#include <print>
 
 int main() {
-  info << "Hello world!";
+  std::println("yuri is {}", "yes");
   return 0;
 }

@@ -38,7 +38,7 @@
   "C_Cpp.intelliSenseEngine": "disabled",
   "C_Cpp.autocomplete": "disabled",
   "editor.fontFamily": "JetBrains Mono Medium", // 编辑器字体
-  "editor.codeLensFontFamily": "JJetBrains Mono Medium",
+  "editor.codeLensFontFamily": "JetBrains Mono Medium",
   // "editor.fontFamily": "Consolas", // 编辑器字体 windows
   // "editor.codeLensFontFamily": "Consolas",
   "terminal.integrated.fontFamily": "JetBrains Mono Medium", // 终端字体

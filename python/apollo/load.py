@@ -1,7 +1,7 @@
 '''
 Author: love-yuri yuri2078170658@gmail.com
 Date: 2024-08-05 12:21:53
-LastEditTime: 2025-07-03 11:10:26
+LastEditTime: 2025-07-12 14:52:29
 Description:
 '''
 import requests
@@ -9,18 +9,15 @@ from bs4 import BeautifulSoup  # type: ignore
 import json
 import time
 
-url = "https://apollo.baidu.com/community/competition/47/{}"
+url = "https://apollo.baidu.com/community/competition/57/{}"
 
 # url = "https://apollo.baidu.com/api/v1/competition/question/environment/list?taskId=66a8bce072c09b06bc90a826"
 
 headers = {
-  "referer": "https://apollo.baidu.com/community/competition/47/143078",
-  "Cookie": ""
-  "userId=2; "
-  "connect.sid=s%3Abo1qC5Wv-drRX-rlEN3o4dhl1IQnYFcV.az0x594W8eOhhID3dNaDxBWAvkNQvxJzYViBLZxEzEI",
+  "Cookie": "connect.sid=s%3Ay7Ub5K8pU1CMMAo9bFDPBuUHb0d2-pFw.oCWDGWJ0Rc%2FBNhnDe8cxB8fE%2BaF9pTnhHyyemtmL5d8;",
 }
 
-start = 143078
+start = 154564
 
 while True:
 
