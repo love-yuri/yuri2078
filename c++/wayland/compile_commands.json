@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/home/yuri/love-yuri/yuri2078/c++/wayland/build",
-  "command": "/etc/profiles/per-user/yuri/bin/g++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -isystem /nix/store/0f3p0yc1sdriypcsqm621akkq0pp29lv-spdlog-1.15.2-dev/include -isystem /nix/store/9h8l3v6w809d6cdspakw6wapsva582vw-fmt-10.2.1-dev/include -g -std=gnu++20 -o CMakeFiles/hello.dir/hello.cpp.o -c /home/yuri/love-yuri/yuri2078/c++/wayland/hello.cpp",
-  "file": "/home/yuri/love-yuri/yuri2078/c++/wayland/hello.cpp",
-  "output": "CMakeFiles/hello.dir/hello.cpp.o"
-}
-]
