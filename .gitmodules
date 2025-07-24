@@ -1,0 +1,3 @@
+  [submodule "c++/wayland/waylandpp"]
+    path = c++/wayland/waylandpp
+    url = https://github.com/NilsBrause/waylandpp.git
