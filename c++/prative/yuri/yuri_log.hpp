@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2025-05-30 14:55:11
+ * @LastEditTime: 2025-09-02 16:07:35
  * @Description: 优化的日志库基于c++11，支持更多类型和更美观的输出
  */
 
@@ -76,41 +76,56 @@ private:
   }
 
   /**
-    * @brief 静态成员函数，用于控制是否将日志写入文件
+   * @brief 静态成员函数，用于控制是否将日志写入文件
    */
   static bool &writeInFile() {
     static bool write_in_file = false;
     return write_in_file;
   }
 
+  static std::string &filePath() {
+    static std::string path{};
+    if (path.empty()) {
+      path = "log.txt";
+    }
+    return path;
+  }
+
   /**
-    * @brief 静态成员函数，用于控制是否使用std::cerr输出错误日志
+   * @brief 静态成员函数，用于控制是否使用std::cerr输出错误日志
    */
   static bool &useStdError() {
     static bool use_std_cerr = false;
     return use_std_cerr;
   }
 
-  void formatMessage(stringRef func, const int line) {
+  void formatMessage() {
     // 添加颜色前缀（仅在控制台输出时）
     if (!writeInFile() && isError) {
       ost << "\x1b[31m"; // 红色
     }
 
-    const std::time_t currentTime = std::time(nullptr);
+    // 获取当前时间（含毫秒）
+    auto now = std::chrono::system_clock::now();
+    auto now_time_t = std::chrono::system_clock::to_time_t(now);
+    auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+
+    // 转换为本地时间
     std::tm localTimeData{};
 #ifdef _WIN32
-    localtime_s(&localTimeData, &currentTime);
+    localtime_s(&localTimeData, &now_time_t);
 #else
-    localtime_r(&currentTime, &localTimeData);
+    localtime_r(&now_time_t, &localTimeData);
 #endif
 
-    char formattedTime[9];
+    // 格式化时间（HH:MM:SS）
+    char formattedTime[9]; // HH:MM:SS 固定8字符 + 终止符
     std::strftime(formattedTime, sizeof(formattedTime), "%H:%M:%S", &localTimeData);
 
-    ost << "[" << formattedTime << " "
-        << (isError ? "ERROR" : "INFO ") << "] "
-        << func << ":" << line << " -> ";
+    // 拼接毫秒（3位）
+    ost << "[" << formattedTime << "."
+        << now_ms.count() << " "
+        << (isError ? "ERROR" : "INFO ") << "] ";
 
 #ifdef _WIN32
     // 启用Windows控制台的ANSI转义序列支持
@@ -155,7 +170,7 @@ private:
         ost << "\n";
       }
       first = false;
-      ost << std::string(INDENT_SIZE, ' ')  << pair.first << ": ";
+      ost << std::string(INDENT_SIZE, ' ') << pair.first << ": ";
       *this << pair.second;
     }
     if (!container.empty()) {
@@ -165,9 +180,15 @@ private:
   }
 
 public:
-  Log(const std::string &func, const int line, bool flag = false) :
-    isError(flag) {
-    formatMessage(func, line);
+  Log(const std::string &func, const int line, bool isError = false) :
+    isError(isError) {
+    formatMessage();
+    ost << func << ":" << line << " -> ";
+  }
+
+  Log(bool isError = false) :
+    isError(isError) {
+    formatMessage();
   }
 
   ~Log() {
@@ -180,7 +201,7 @@ public:
 
     if (writeInFile()) {
       try {
-        std::ofstream file("log.txt", std::ios::app);
+        std::ofstream file(filePath(), std::ios::app);
         if (file.is_open()) {
           file << ost.str() << '\n';
           file.flush();
@@ -191,7 +212,6 @@ public:
     } else {
       ost << '\n';
       std::ostream &ostream = useStdError() && isError ? std::cerr : std::cout;
-      // 统一使用 std::cout 并强制刷新，确保输出顺序
       ostream << ost.str();
       ostream.flush();
     }
