@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2025-09-02 16:07:35
+ * @LastEditTime: 2025-09-02 16:19:21
  * @Description: 优化的日志库基于c++11，支持更多类型和更美观的输出
  */
 
@@ -64,13 +64,8 @@ struct is_map_like<std::unordered_map<K, V, Args...>> : std::true_type {};
 } // namespace detail
 
 class Log final {
-private:
-  std::ostringstream ost;
-  using stringRef = const std::string &;
-  bool isError = false;
-  static constexpr int INDENT_SIZE = 2;
-
-  std::mutex &getMutex() {
+public:
+    static std::mutex &getMutex() {
     static std::mutex mutex;
     return mutex;
   }
@@ -99,6 +94,13 @@ private:
     return use_std_cerr;
   }
 
+private:
+  std::ostringstream ost;
+  using stringRef = const std::string &;
+  bool isError = false;
+  static constexpr int INDENT_SIZE = 2;
+
+
   void formatMessage() {
     // 添加颜色前缀（仅在控制台输出时）
     if (!writeInFile() && isError) {
@@ -125,7 +127,7 @@ private:
     // 拼接毫秒（3位）
     ost << "[" << formattedTime << "."
         << now_ms.count() << " "
-        << (isError ? "ERROR" : "INFO ") << "] ";
+        << (isError ? "ERROR" : "INFO") << "] ";
 
 #ifdef _WIN32
     // 启用Windows控制台的ANSI转义序列支持
@@ -186,7 +188,7 @@ public:
     ost << func << ":" << line << " -> ";
   }
 
-  Log(bool isError = false) :
+  explicit Log(const bool isError = false) :
     isError(isError) {
     formatMessage();
   }
