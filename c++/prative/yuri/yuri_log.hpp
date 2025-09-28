@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2025-09-28 09:41:55
+ * @LastEditTime: 2025-09-28 09:50:15
  * @Description: 优化的日志库基于c++11，支持更多类型和更美观的输出
  */
 
@@ -289,6 +289,7 @@ public:
     return *this;
   }
 
+  // bool 类型特化
   Log &operator<<(const bool v) {
     ost << std::boolalpha << v;
     return *this;
