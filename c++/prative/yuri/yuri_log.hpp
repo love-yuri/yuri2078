@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2025-09-02 16:19:21
+ * @LastEditTime: 2025-09-28 09:41:55
  * @Description: 优化的日志库基于c++11，支持更多类型和更美观的输出
  */
 
@@ -221,8 +221,7 @@ public:
 
   // 基础类型输出
   template <typename T>
-  typename std::enable_if<!detail::is_container<T>::value && !detail::is_pair<T>::value, Log &>::type
-  operator<<(const T &val) {
+  Log& operator<<(const T &val) {
     ost << val;
     return *this;
   }
@@ -290,29 +289,11 @@ public:
     return *this;
   }
 
-  // C风格数组特化
-  template <typename T, std::size_t N>
-  Log &operator<<(const T (&arr)[N]) {
-    ost << "[";
-    for (std::size_t i = 0; i < N; ++i) {
-      if (i > 0) ost << ", ";
-      *this << arr[i];
-    }
-    ost << "]";
+  Log &operator<<(const bool v) {
+    ost << std::boolalpha << v;
     return *this;
   }
 
-  // 字符串字面量特化
-  Log &operator<<(const char *str) {
-    ost << str;
-    return *this;
-  }
-
-  // 字符串字特化
-  Log &operator<<(const std::string &str) {
-    ost << str;
-    return *this;
-  }
 };
 
 } // namespace yuri
