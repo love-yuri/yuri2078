@@ -37,15 +37,19 @@
   "C_Cpp.intelliSenseEngineFallback": "disabled",
   "C_Cpp.intelliSenseEngine": "disabled",
   "C_Cpp.autocomplete": "disabled",
-  "editor.fontFamily": "Maple Mono Medium", // 编辑器字体
-  "editor.codeLensFontFamily": "JetBrains Mono Medium",
+  "editor.fontFamily": "Maple Mono NF CN Medium" , // 编辑器字体
+  "editor.codeLensFontFamily": "Maple Mono NF CN Medium",
   // "editor.fontFamily": "Consolas", // 编辑器字体 windows
   // "editor.codeLensFontFamily": "Consolas",
-  "terminal.integrated.fontFamily": "JetBrains Mono Medium", // 终端字体
+  "terminal.integrated.fontFamily": "Maple Mono NF CN Medium", // 终端字体
   // "terminal.integrated.fontFamily": "JetBrainsMonoNL Nerd Font Mono", // 终端字体
-  "editor.fontSize": 26, // 编辑器文字大小
+   "workbench.fontAliasing": "antialiased",  // 抗锯齿模式
+  "window.titleBarStyle": "custom",         // 确保标题栏字体生效
+  "editor.fontSize": 22, // 编辑器文字大小
   "terminal.integrated.fontSize": 23, // 集成终端字体大小
   "editor.semanticHighlighting.enabled": true,
+  "editor.fontLigatures": true,
+  "editor.fontVariations": false,
   "clangd.arguments": [
     "--all-scopes-completion",
     "--background-index",
@@ -124,5 +128,12 @@
   "cmake.sourceDirectory": "${workspaceFolder}/CMakeLists.txt",
   "cmake.ignoreCMakeListsMissing": true,
   "cSpell.words": ["yinfo", "yerror"],
-  "python.analysis.extraPaths": ["./"],
+  "Lua.type.inferTableSize": 2,
+  "Lua.runtime.version": "LuaJIT",
+  "Lua.diagnostics.globals": ["vim"],
+  "Lua.workspace.library": [
+    "/nix/store/99mraj58037wa3wwhv47iqafy922zqhi-neovim-unwrapped-0.11.2/share/nvim/runtime/lua",
+    "/nix/store/99mraj58037wa3wwhv47iqafy922zqhi-neovim-unwrapped-0.11.2/share/nvim/runtime/lua/vim/lsp"
+  ],
+  "Lua.workspace.checkThirdParty": false
 }
