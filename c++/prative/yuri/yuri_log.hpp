@@ -1,12 +1,11 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2025-09-28 09:50:15
+ * @LastEditTime: 2025-10-14 14:02:14
  * @Description: 优化的日志库基于c++11，支持更多类型和更美观的输出
  */
 
-#ifndef YURI_LOG_HPP
-#define YURI_LOG_HPP
+#pragma once
 
 #include <fstream>
 #include <iostream>
@@ -14,6 +13,7 @@
 #include <sstream>
 #include <ctime>
 #include <vector>
+#include <chrono>
 #include <map>
 #include <unordered_map>
 #include <set>
@@ -21,8 +21,7 @@
 #include <list>
 #include <deque>
 #include <array>
-#include <type_traits>
-#include <utility>
+#include <iomanip>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -30,46 +29,14 @@
 
 namespace yuri {
 
-namespace detail {
-// SFINAE helpers for container detection
-template <typename T>
-struct is_container {
-  template<typename U>
-  static auto test(int) -> decltype(
-    std::begin(std::declval<U>()),
-    std::end(std::declval<U>()),
-    std::true_type{}
-  );
-
-  template <typename>
-  static std::false_type test(...);
-
-  static constexpr bool value = decltype(test<T>(0))::value;
-};
-
-template <typename T>
-struct is_pair : std::false_type {};
-
-template <typename K, typename V>
-struct is_pair<std::pair<K, V>> : std::true_type {};
-
-template <typename T>
-struct is_map_like : std::false_type {};
-
-template <typename K, typename V, typename... Args>
-struct is_map_like<std::map<K, V, Args...>> : std::true_type {};
-
-template <typename K, typename V, typename... Args>
-struct is_map_like<std::unordered_map<K, V, Args...>> : std::true_type {};
-} // namespace detail
-
 class Log final {
 public:
-    static std::mutex &getMutex() {
-    static std::mutex mutex;
-    return mutex;
-  }
-
+  enum class LogLevel {
+    Info,
+    Warning,
+    Debug,
+    Error
+  };
   /**
    * @brief 静态成员函数，用于控制是否将日志写入文件
    */
@@ -97,13 +64,17 @@ public:
 private:
   std::ostringstream ost;
   using stringRef = const std::string &;
-  bool isError = false;
+  LogLevel level = LogLevel::Info;
   static constexpr int INDENT_SIZE = 2;
 
+  static std::mutex &getMutex() {
+    static std::mutex mutex;
+    return mutex;
+  }
 
   void formatMessage() {
     // 添加颜色前缀（仅在控制台输出时）
-    if (!writeInFile() && isError) {
+    if (!writeInFile() && level == LogLevel::Error) {
       ost << "\x1b[31m"; // 红色
     }
 
@@ -124,10 +95,36 @@ private:
     char formattedTime[9]; // HH:MM:SS 固定8字符 + 终止符
     std::strftime(formattedTime, sizeof(formattedTime), "%H:%M:%S", &localTimeData);
 
-    // 拼接毫秒（3位）
-    ost << "[" << formattedTime << "."
-        << now_ms.count() << " "
-        << (isError ? "ERROR" : "INFO") << "] ";
+    switch (level) {
+      case LogLevel::Info:
+        ost << "\x1b[38;5;41m";
+        break;
+      case LogLevel::Warning:
+        ost << "\x1b[33m";
+        break;
+      case LogLevel::Debug:
+      case LogLevel::Error: break;
+    }
+
+    // 拼接毫秒（固定3位，不足补零）
+    ost
+      << "[" << formattedTime << "."
+      << std::setw(3) << std::setfill('0') << now_ms.count() << " ";
+
+    switch (level) {
+      case LogLevel::Info:
+        ost << "INFO]\x1b[0m ";
+        break;
+      case LogLevel::Warning:
+        ost << "WARN\x1b[0m ";
+        break;
+      case LogLevel::Debug:
+        ost << "DEBUG\x1b[0m ";
+        break;
+      case LogLevel::Error:
+        ost << "ERROR] ";
+        break;
+    }
 
 #ifdef _WIN32
     // 启用Windows控制台的ANSI转义序列支持
@@ -182,24 +179,24 @@ private:
   }
 
 public:
-  Log(const std::string &func, const int line, bool isError = false) :
-    isError(isError) {
+  Log(const std::string &func, const int line, LogLevel level = LogLevel::Info) :
+    level(level) {
     formatMessage();
     ost << func << ":" << line << " -> ";
   }
 
-  explicit Log(const bool isError = false) :
-    isError(isError) {
+  explicit Log(LogLevel level = LogLevel::Info) :
+    level(level) {
     formatMessage();
   }
 
   ~Log() {
-    std::unique_lock<std::mutex> lock(getMutex());
-
     // 添加颜色重置（仅在控制台输出时）
     if (!writeInFile()) {
       ost << "\x1b[0m";
     }
+
+    std::lock_guard<std::mutex> lock(getMutex());
 
     if (writeInFile()) {
       try {
@@ -213,7 +210,7 @@ public:
       }
     } else {
       ost << '\n';
-      std::ostream &ostream = useStdError() && isError ? std::cerr : std::cout;
+      std::ostream &ostream = useStdError() && level == LogLevel::Error ? std::cerr : std::cout;
       ostream << ost.str();
       ostream.flush();
     }
@@ -300,11 +297,9 @@ public:
 } // namespace yuri
 
 #ifndef yinfo
-#define yinfo ::yuri::Log(__func__, __LINE__, false)
+#define yinfo ::yuri::Log(__func__, __LINE__, ::yuri::Log::LogLevel::Info)
 #endif
 
 #ifndef yerror
-#define yerror ::yuri::Log(__func__, __LINE__, true)
+#define yerror ::yuri::Log(__func__, __LINE__, ::yuri::Log::LogLevel::Error)
 #endif
-
-#endif /* YURI_LOG_HPP */
