@@ -1,8 +1,8 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2025-10-14 14:02:14
- * @Description: 优化的日志库基于c++11，支持更多类型和更美观的输出
+ * @LastEditTime: 2025-10-17 16:37:53
+ * @Description: 高性能的日志库基于c++11，支持更多类型和更美观的输出，单文件 13万条/s 单控制台 5万/s
  */
 
 #pragma once
@@ -21,7 +21,6 @@
 #include <list>
 #include <deque>
 #include <array>
-#include <iomanip>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -31,20 +30,39 @@ namespace yuri {
 
 class Log final {
 public:
+  // 仅写入控制台
+  constexpr static uint8_t WriteInConsole = 0x0001;
+
+  // 仅写入文件
+  constexpr static uint8_t WriteInFile = 0x0002;
+
+  // 同时写入控制台和文件
+  constexpr static uint8_t WriteInConsoleAndFile = WriteInConsole | WriteInFile;
+
   enum class LogLevel {
     Info,
     Warning,
     Debug,
     Error
   };
+
+  constexpr static std::array<const char*, 4> levelStrings = {
+    "INFO", "WARN", "DEBUG", "ERROR"
+  };
+
   /**
-   * @brief 静态成员函数，用于控制是否将日志写入文件
+   * 控制设备的写入模式
+   * @return 写入模式引用
    */
-  static bool &writeInFile() {
-    static bool write_in_file = false;
-    return write_in_file;
+  static uint8_t &writeMode() {
+    static uint8_t write_mode = WriteInConsole;
+    return write_mode;
   }
 
+  /**
+   * 写入文件时的文件路径
+   * @return 设置文件路径
+   */
   static std::string &filePath() {
     static std::string path{};
     if (path.empty()) {
@@ -72,16 +90,15 @@ private:
     return mutex;
   }
 
-  void formatMessage() {
-    // 添加颜色前缀（仅在控制台输出时）
-    if (!writeInFile() && level == LogLevel::Error) {
-      ost << "\x1b[31m"; // 红色
-    }
-
+  /**
+   * 格式化日志消息
+   * @return 格式化后的消息
+   */
+  std::string formatMessage() {
     // 获取当前时间（含毫秒）
-    auto now = std::chrono::system_clock::now();
+    const auto now = std::chrono::system_clock::now();
     auto now_time_t = std::chrono::system_clock::to_time_t(now);
-    auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+    const auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
 
     // 转换为本地时间
     std::tm localTimeData{};
@@ -95,53 +112,36 @@ private:
     char formattedTime[9]; // HH:MM:SS 固定8字符 + 终止符
     std::strftime(formattedTime, sizeof(formattedTime), "%H:%M:%S", &localTimeData);
 
-    switch (level) {
-      case LogLevel::Info:
-        ost << "\x1b[38;5;41m";
-        break;
-      case LogLevel::Warning:
-        ost << "\x1b[33m";
-        break;
-      case LogLevel::Debug:
-      case LogLevel::Error: break;
-    }
+    char buf[26];
+    std::snprintf(
+      buf,
+      sizeof(buf),
+      "[%02d:%02d:%02d.%03ld %s] ",
+      localTimeData.tm_hour,
+      localTimeData.tm_min,
+      localTimeData.tm_sec,
+      now_ms.count(),
+      levelStrings[static_cast<unsigned>(level)]
+    );
 
-    // 拼接毫秒（固定3位，不足补零）
-    ost
-      << "[" << formattedTime << "."
-      << std::setw(3) << std::setfill('0') << now_ms.count() << " ";
 
-    switch (level) {
-      case LogLevel::Info:
-        ost << "INFO]\x1b[0m ";
-        break;
-      case LogLevel::Warning:
-        ost << "WARN\x1b[0m ";
-        break;
-      case LogLevel::Debug:
-        ost << "DEBUG\x1b[0m ";
-        break;
-      case LogLevel::Error:
-        ost << "ERROR] ";
-        break;
-    }
-
-#ifdef _WIN32
     // 启用Windows控制台的ANSI转义序列支持
     static bool console_initialized = false;
     if (!console_initialized) {
+      std::cout.setf(std::ios::unitbuf);
+      #ifdef _WIN32
+      // 设置编码
+      SetConsoleOutputCP(CP_UTF8);
       const auto hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
       DWORD mode;
       if (GetConsoleMode(hConsole, &mode)) {
         SetConsoleMode(hConsole, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
       }
+      #endif
       console_initialized = true;
     }
-#endif
-  }
 
-  static void logResult(const std::string &msg, std::ostream &ostream) {
-    ostream << msg << std::endl;
+    return std::string { buf };
   }
 
   // 格式化容器的辅助函数
@@ -181,38 +181,51 @@ private:
 public:
   Log(const std::string &func, const int line, LogLevel level = LogLevel::Info) :
     level(level) {
-    formatMessage();
     ost << func << ":" << line << " -> ";
   }
 
-  explicit Log(LogLevel level = LogLevel::Info) :
+  explicit Log(const LogLevel level = LogLevel::Info) :
     level(level) {
-    formatMessage();
   }
 
   ~Log() {
-    // 添加颜色重置（仅在控制台输出时）
-    if (!writeInFile()) {
-      ost << "\x1b[0m";
-    }
+    const std::string prefix = formatMessage();
 
     std::lock_guard<std::mutex> lock(getMutex());
 
-    if (writeInFile()) {
+    if (writeMode() & WriteInConsole) {
+      std::ostream &ostream = useStdError() && level == LogLevel::Error ? std::cerr : std::cout;
+      switch (level) {
+        case LogLevel::Info:
+          ostream << "\x1b[38;5;41m";
+          break;
+        case LogLevel::Warning:
+          ostream << "\x1b[33m";
+          break;
+        case LogLevel::Debug:
+          break;
+        case LogLevel::Error:
+          ostream << "\x1b[31m";
+          break;
+      }
+      ostream << prefix;
+      if (level != LogLevel::Error) {
+        ostream << "\x1b[0m" << ost.str() << '\n';
+      } else {
+        ostream << ost.str() << '\n';
+      }
+    }
+
+    if (writeMode() & WriteInFile) {
       try {
         std::ofstream file(filePath(), std::ios::app);
         if (file.is_open()) {
-          file << ost.str() << '\n';
+          file << prefix << ost.str() << '\n';
           file.flush();
         }
       } catch (const std::exception &e) {
         std::cerr << "Log file error: " << e.what() << std::endl;
       }
-    } else {
-      ost << '\n';
-      std::ostream &ostream = useStdError() && level == LogLevel::Error ? std::cerr : std::cout;
-      ostream << ost.str();
-      ostream.flush();
     }
   }
 
