@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2025-10-17 16:37:53
+ * @LastEditTime: 2025-11-02 21:21:54
  * @Description: 高性能的日志库基于c++11，支持更多类型和更美观的输出，单文件 13万条/s 单控制台 5万/s
  */
 
@@ -128,7 +128,6 @@ private:
     // 启用Windows控制台的ANSI转义序列支持
     static bool console_initialized = false;
     if (!console_initialized) {
-      std::cout.setf(std::ios::unitbuf);
       #ifdef _WIN32
       // 设置编码
       SetConsoleOutputCP(CP_UTF8);
@@ -210,9 +209,9 @@ public:
       }
       ostream << prefix;
       if (level != LogLevel::Error) {
-        ostream << "\x1b[0m" << ost.str() << '\n';
+        ostream << "\x1b[0m" << ost.str() << std::endl;
       } else {
-        ostream << ost.str() << '\n';
+        ostream << ost.str() << std::endl;
       }
     }
 
