@@ -25,6 +25,7 @@
   "editor.cursorBlinking": "expand", // 光标闪烁效果（expand/phase/solid等）
   "editor.cursorStyle": "line", // 光标样式（line/block/underline）
   "editor.cursorWidth": 2, // 光标宽度（像素）
+  "editor.tabSize": 2, // tap宽度
   "workbench.list.smoothScrolling": true,
   "editor.smoothScrolling": true,
   "terminal.integrated.smoothScrolling": true,
@@ -65,6 +66,7 @@
     "--pretty",
     "--ranking-model=decision_forest",
     "--enable-config",
+    "--experimental-modules-support",
     "-j=12"
   ],
   "C_Cpp.default.cppStandard": "c++23",
