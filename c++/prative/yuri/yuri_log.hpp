@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2025-10-21 16:51:39
+ * @LastEditTime: 2025-11-02 21:21:54
  * @Description: 高性能的日志库基于c++11，支持更多类型和更美观的输出，单文件 13万条/s 单控制台 5万/s
  */
 
