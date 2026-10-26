@@ -18,7 +18,7 @@ void log_test_thread() {
   auto start = std::chrono::steady_clock::now();
   while (true) {
     // 写入不同类型的日志
-    yerror << "yuri is yes";
+    yinfo << "yuri is yes";
 
     counter++;
 
