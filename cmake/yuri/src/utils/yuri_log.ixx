@@ -7,8 +7,8 @@
 module;
 #ifdef _WIN32
 #include <windows.h>
-#include <ctime>
 #endif
+#include <ctime>
 export module yuri_log;
 
 import std;
@@ -107,7 +107,11 @@ private:
     std::snprintf(
       buf,
       sizeof(buf),
+#ifdef _WIN32
       "[%02d:%02d:%02d.%03lld %s] ",
+#else
+      "[%02d:%02d:%02d.%03ld %s] ",
+#endif
       localTimeData.tm_hour,
       localTimeData.tm_min,
       localTimeData.tm_sec,
@@ -302,9 +306,19 @@ void info(const std::format_string<Args...> fmt, Args&&... args) {
   Log(Log::LogLevel::Info) << std::format(fmt, std::forward<Args>(args)...);
 }
 
+template <typename T>
+void info(const T && t) {
+  Log(Log::LogLevel::Info) << t;
+}
+
 template <typename... Args>
 void error(const std::format_string<Args...> fmt, Args&&... args) {
   Log(Log::LogLevel::Error) << std::format(fmt, std::forward<Args>(args)...);
+}
+
+template <typename T>
+void error(const T && t) {
+  Log(Log::LogLevel::Error) << t;
 }
 
 template <typename... Args>
@@ -312,9 +326,19 @@ void warn(const std::format_string<Args...> fmt, Args&&... args) {
   Log(Log::LogLevel::Warning) << std::format(fmt, std::forward<Args>(args)...);
 }
 
+template <typename T>
+void warn(const T && t) {
+  Log(Log::LogLevel::Warning) << t;
+}
+
 template <typename... Args>
 void debug(const std::format_string<Args...> fmt, Args&&... args) {
   Log(Log::LogLevel::Debug) << std::format(fmt, std::forward<Args>(args)...);
+}
+
+template <typename T>
+void debug(const T && t) {
+  Log(Log::LogLevel::Debug) << t;
 }
 
 } // namespace yuri
