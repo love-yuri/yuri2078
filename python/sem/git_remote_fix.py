@@ -4,7 +4,7 @@ import sys
 import subprocess
 
 # 工作目录 支持递归
-working_directory = r"E:\work"
+working_directory = r"E:\\work"
 
 # 目标ip
 target_ip = "10.0.1.152"
